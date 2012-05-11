@@ -36,42 +36,41 @@ class User < ActiveRecord::Base
     unless user_word_relation.nil?
       doc = user_word_relation.open_file
       all_dates = doc.root.elements["old_words"].elements["all_date"].text
-      puts all_dates
-      puts "---------------------------------"
       leave_dates = []
       all_dates.split(",").each {|d|
-        puts d.to_date
-
         leave_dates << d if d.to_date < Time.now.to_date
       } unless all_dates.nil? or all_dates.empty?
       
       leave_dates.each {|l_d|
         word_list = doc.root.elements["old_words"].elements["_#{l_d}"]
-        if word_list.elements["word"].size > 0
+        if !word_list.nil? and word_list.elements.size > 0
           word_list.each_element {|w|
-            if w.attributes["step"] == REPEAT_STATUS["L"]
-              doc.delete_elament(w.xpath)
-              doc.root.elements["new_words"].add_element("word", 
+            if w.attributes["step"].to_i == REPEAT_STATUS["L"]
+              doc.root.elements["new_words"].add_element("word",
                 {"id"=>"#{w.attributes["id"]}", "is_error" => "false", "repeat_time" => "0"})
+              doc.delete_element(w.xpath)
             else
-              if w.attributes["end_at"].to_date < Time.now
-                w.attributes["step"] = w.attributes["step"] - 1
-                w.attributes["start_at"] = Time.now.strftime("%Y_%m_%d")
-                w.attributes["end_at"] = (Time.now
-                  + REPEAT_LAST_DAY[REPEAT_NUM[w.attributes["step"].to_i]].days).strftime("%Y_%m_%d")
-                w.attributes["is_error"] = "false"
-                w.attributes["repeat_time"] = "0"
+              if w.attributes["end_at"].to_date < Time.now.to_date
+                new_start_date = Time.now.strftime("%Y-%m-%d")
+                current_date_element = doc.root.elements["old_words"].elements["_#{new_start_date}"]
+                doc.root.elements["old_words"].add_element("_#{new_start_date}") if current_date_element.nil?
+                end_date = (Time.now + REPEAT_LAST_DAY[REPEAT_NUM[w.attributes["step"].to_i]].days).strftime("%Y-%m-%d")
+                
+                doc.root.elements["old_words"].elements["_#{new_start_date}"].add_element("word",
+                  {"step" => "#{w.attributes["step"].to_i - 1}", "start_at" => new_start_date, "end_at" => end_date,
+                      "is_error" => "false", "repeat_time" => "0", "id" => w.attributes["id"]})
+                doc.delete_element(w.xpath)
               end
             end
           }
         else
-          doc.delete_element(word_list.xpath)
-        end        
+          doc.delete_element(word_list.xpath) unless word_list.nil?
+          doc.root.elements["old_words"].elements["all_date"].text = (all_dates.split(",") - [l_d]).join(",")
+        end
       } unless leave_dates.blank?
       path_url = user_word_relation.practice_url.split("/")
 
       puts doc
-      puts "--------------------------"
       user_word_relation.user.write_file(doc.to_s, path_url[1], "xml", "user_word_xml")
     end
   end
