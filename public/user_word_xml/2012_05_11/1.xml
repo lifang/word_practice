@@ -1,0 +1,32 @@
+<user_words user_id="1">
+	<new_words>
+		<word id="13" is_error="true" repeat_time="0" />
+		<word id="14" is_error="true" repeat_time="0" />
+		<word id="15" is_error="false" repeat_time="0" />
+		<word id="16" is_error="false" repeat_time="0" />
+		<word id="17" is_error="false" repeat_time="0" />
+		<word id="18" is_error="false" repeat_time="0" />
+		<word id="19" is_error="false" repeat_time="0" />
+	</new_words>
+	<old_words>
+		<all_date>2012_5_9, 2012_5_10, 2012_5_11</all_date>
+		<_2012_5_9>
+			<word id="1" step="1" start_at="2012_5_9" end_at="2012_5_9" is_error="true" repeat_time="1" />
+			<word id="2" step="2" start_at="2012_5_9" end_at="2012_5_10" is_error="false" repeat_time="0" />
+			<word id="3" step="3" start_at="2012_5_9" end_at="2012_5_11" is_error="false" repeat_time="0" />
+			<word id="4" step="4" start_at="2012_5_9" end_at="2012_5_13" is_error="false" repeat_time="0" />
+		</_2012_5_9>
+		<_2012_5_10>
+			<word id="5" step="1" start_at="2012_5_10" end_at="2012_5_10" is_error="false" repeat_time="0" />
+			<word id="6" step="2" start_at="2012_5_10" end_at="2012_5_11" is_error="false" repeat_time="0" />
+			<word id="7" step="3" start_at="2012_5_10" end_at="2012_5_12" is_error="false" repeat_time="0" />
+			<word id="8" step="4" start_at="2012_5_10" end_at="2012_5_14" is_error="false" repeat_time="0" />
+		</_2012_5_10>
+		<_2012_5_11>
+			<word id="9" step="1" start_at="2012_5_11" end_at="2012_5_11" is_error="false" repeat_time="0" />
+			<word id="10" step="2" start_at="2012_5_11" end_at="2012_5_12" is_error="false" repeat_time="0" />
+			<word id="11" step="3" start_at="2012_5_11" end_at="2012_5_13" is_error="false" repeat_time="0" />
+			<word id="12" step="4" start_at="2012_5_11" end_at="2012_5_15" is_error="false" repeat_time="0" />
+		</_2012_5_11>
+	</old_words>
+</user_words>
