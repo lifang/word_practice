@@ -5,18 +5,19 @@ class WordsController < ApplicationController
     cookies[:user_id]=1
     cookies[:user_name]="jeffrey6052"
     #---------------------------------------------------硬写 cookies
-#    @user = User.find(cookies[:user_id])
-#    @user.init_word_list(2)  # 用户第一次登录，创建数据库记录，以及XML文件
-#    @user.makeup_words(cookies[:user_id])  # 根据xml内容更新数据库
 
+    @user = User.find(cookies[:user_id])
+    @user.init_word_list(2)  # 用户第一次登录，创建数据库记录，以及XML文件
+    @user.makeup_oldwords(cookies[:user_id])  # 根据xml内容更新数据库
     user_id = cookies[:user_id]
     @circle_data = circle_data(user_id)
     
   end
 
+  
   def show
-  end
 
+  end
 
   #返回 [已掌握 初步掌握 未掌握],如 [35,35,30],3个元素相加等于100
   def circle_data(user_id)

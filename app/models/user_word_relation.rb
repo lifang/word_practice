@@ -16,7 +16,7 @@ class UserWordRelation < ActiveRecord::Base
 
   #打开用户正在背诵的词汇表
   def open_file
-    file=File.open "#{Constant::PUBLIC_PATH}/user_word_xml/#{self.practice_url}"
+    file = File.open "#{Constant::PUBLIC_PATH}/user_word_xml/#{self.practice_url}"
     doc = Document.new(file)
     file.close
     return doc
