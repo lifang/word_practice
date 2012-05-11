@@ -31,14 +31,18 @@ class User < ActiveRecord::Base
 
   #根据用户更新用户当天要复习的单词
   def makeup_words(user_id)
-    user_word_relation = UserWordRelation.find_by_sql(["select id, practice_url
+    user_word_relation = UserWordRelation.find_by_sql(["select id, user_id, practice_url
       from user_word_relations where user_id = ?", user_id])[0]
     unless user_word_relation.nil?
       doc = user_word_relation.open_file
       all_dates = doc.root.elements["old_words"].elements["all_date"].text
+      puts all_dates
+      puts "---------------------------------"
       leave_dates = []
       all_dates.split(",").each {|d|
-        leave_dates << d if d.to_date < Time.now
+        puts d.to_date
+
+        leave_dates << d if d.to_date < Time.now.to_date
       } unless all_dates.nil? or all_dates.empty?
       
       leave_dates.each {|l_d|
@@ -65,7 +69,10 @@ class User < ActiveRecord::Base
         end        
       } unless leave_dates.blank?
       path_url = user_word_relation.practice_url.split("/")
-      user_word_relation.user.write_file(doc, path_url[1], "xml", "user_word_xml")
+
+      puts doc
+      puts "--------------------------"
+      user_word_relation.user.write_file(doc.to_s, path_url[1], "xml", "user_word_xml")
     end
   end
 
