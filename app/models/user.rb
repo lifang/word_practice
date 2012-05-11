@@ -42,7 +42,7 @@ class User < ActiveRecord::Base
       } unless all_dates.nil? or all_dates.empty?
       
       leave_dates.each {|l_d|
-        word_list = doc.root.elements["old_words"].elements[l_d]
+        word_list = doc.root.elements["old_words"].elements["_#{l_d}"]
         if word_list.elements["word"].size > 0
           word_list.each_element {|w|
             if w.attributes["step"] == REPEAT_STATUS["L"]
