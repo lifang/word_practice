@@ -1,4 +1,9 @@
 WordPractice::Application.routes.draw do
+
+  resources :words do
+    
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -48,7 +53,7 @@ WordPractice::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  # root :to => 'welcome#index'
+   root :to => 'words#index'
 
   # See how all your routes lay out with "rake routes"
 

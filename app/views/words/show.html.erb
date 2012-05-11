@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0 minimum-scale=1.0,maximum-scale=1.3 user-scalable=yes">
+<meta charset="utf-8">
+<title>大学英语四级词汇</title>
+<link href="/assets/style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="/assets/jquery-1.7.js"></script>
+<script type="text/javascript" src="/assets/main.js"></script>
+
+<script type="text/javascript" src="/assets/iscroll.js"></script>
+<script type="text/javascript">
+var myScroll;
+function loaded() {
+myScroll = new iScroll('wrapper');
+}
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false)
+document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
+
+</script>
+
+</head>
+
+<body>
+     <header>
+            <div class="top_line"></div>
+            <div class="back border_radius" onclick="javascript:window.location.href='/words'">返回</div>
+            <h1 class="h_title">大学英语四级词汇</h1>
+     </header>
+
+     <section class="main" id="wrapper">
+           <div id="scroller">
+                <section class="m_box angled-135 stripes border_radius">
+                     <article class="words_audio">
+                         <h3>Bank</h3>
+                         <div class="play_audio">Play</div>
+                         <audio preload="preload" loop>
+                               <source src="http://www.iyoya.com/material/music/ogg/001.ogg" type="audio/ogg" />
+  						       <source src="song.mp3" type="audio/mpeg" />
+                               您的浏览器不支持 audio 标签。
+                         </audio>
+                     </article>
+                     <section class="words_list border_radius">
+                             <p>n.<span>枪支</span></p>
+                     </section>
+                     <section class="words_list border_radius">
+                             <p>n.<span>银行</span></p>
+                     </section>
+                     <section class="words_list border_radius">
+                             <p>n.<span>房屋</span></p>
+                     </section>
+                     <section class="words_list border_radius">
+                             <p>n.<span>工厂</span></p>
+                     </section>
+
+                </section>
+                <section class="words_btn_box">
+                        <div class="rollBack">翻面学习</div>
+                        <div class="knowWell">已经掌握</div>
+                </section>
+           </div>
+     </section>
+
+
+</body>
+</html>
