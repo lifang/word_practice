@@ -6,7 +6,8 @@ class UserWordRelation < ActiveRecord::Base
   include REXML
 
   
-  STATUS = {:NOMAL => 0, :RECITE => 1} #0 未背诵 1 已背诵
+  STUDY_ROLE = {:NOMAL => 0, :SPELL => 1} #0 认读 1 认读 + 拼写
+
 
   def self.user_words(user_id, category_id)
     return UserWordRelation.count_by_sql(["select count(uwr.id) from user_word_relations uwr
@@ -20,6 +21,11 @@ class UserWordRelation < ActiveRecord::Base
     doc = Document.new(file)
     file.close
     return doc
+  end
+
+  #更新用户的学习时间
+  def update_study_times(num)
+    self.update_attributes(:all_study_time => self.all_study_time + num)
   end
 
 end
