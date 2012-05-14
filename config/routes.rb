@@ -1,7 +1,9 @@
 WordPractice::Application.routes.draw do
 
   resources :words do
-    
+    collection do
+      get :start
+    end
   end
 
   # The priority is based upon order of creation:

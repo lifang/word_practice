@@ -10,24 +10,31 @@
         <word id='19' is_error='false' repeat_time='0'/>
         <word id='1' is_error='false' repeat_time='0'/>
         <word id='5' is_error='false' repeat_time='0'/>
+        <word id='9' is_error='false' repeat_time='0'/>
+        <word id='2' is_error='false' repeat_time='0'/>
     </new_words>
     <old_words>
-        <all_date>2012-05-09,2012-05-10,2012-05-11</all_date>
-        <_2012-05-09>
-            <word end_at='2012-05-11' id='3' is_error='false' repeat_time='0' start_at='2012-05-09' step='3'/>
-            <word end_at='2012-05-13' id='4' is_error='false' repeat_time='0' start_at='2012-05-09' step='4'/>
-        </_2012-05-09>
+        <all_date>2012-05-10,2012-05-11</all_date>
+        
         <_2012-05-10>
-            <word end_at='2012-5-11' id='6' is_error='false' repeat_time='0' start_at='2012-05-10' step='2'/>
-            <word end_at='2012-5-12' id='7' is_error='false' repeat_time='0' start_at='2012-05-10' step='3'/>
+            
+            
             <word end_at='2012-5-14' id='8' is_error='false' repeat_time='0' start_at='2012-05-10' step='4'/>
         </_2012-05-10>
         <_2012-05-11>
-            <word end_at='2012-05-11' id='9' is_error='false' repeat_time='0' start_at='2012-05-11' step='1'/>
-            <word end_at='2012-05-12' id='10' is_error='false' repeat_time='0' start_at='2012-05-11' step='2'/>
-            <word end_at='2012-05-13' id='11' is_error='false' repeat_time='0' start_at='2012-05-11' step='3'/>
+            
+            
+            
             <word end_at='2012-05-15' id='12' is_error='false' repeat_time='0' start_at='2012-05-11' step='4'/>
-            <word end_at='2012-05-12' id='2' is_error='false' repeat_time='0' start_at='2012-05-11' step='1'/>
+            
         </_2012-05-11>
+        <_2012-05-14>
+            <word end_at='2012-05-16' id='3' is_error='false' repeat_time='0' start_at='2012-05-14' step='2'/>
+            <word end_at='2012-05-18' id='4' is_error='false' repeat_time='0' start_at='2012-05-14' step='3'/>
+            <word end_at='2012-05-15' id='6' is_error='false' repeat_time='0' start_at='2012-05-14' step='1'/>
+            <word end_at='2012-05-16' id='7' is_error='false' repeat_time='0' start_at='2012-05-14' step='2'/>
+            <word end_at='2012-05-15' id='10' is_error='false' repeat_time='0' start_at='2012-05-14' step='1'/>
+            <word end_at='2012-05-16' id='11' is_error='false' repeat_time='0' start_at='2012-05-14' step='2'/>
+        </_2012-05-14>
     </old_words>
 </user_words>
