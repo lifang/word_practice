@@ -5,7 +5,6 @@ class WordsController < ApplicationController
     cookies[:user_id]=1
     cookies[:user_name]="jeffrey6052"
     #---------------------------------------------------硬写 cookies
-
     @user = User.find(cookies[:user_id])
     @user.init_word_list(2)  # 用户第一次登录，创建数据库记录，以及XML文件
     @user.makeup_oldwords(cookies[:user_id])  # 根据xml内容更新数据库
