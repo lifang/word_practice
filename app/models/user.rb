@@ -35,7 +35,7 @@ class User < ActiveRecord::Base
       from user_word_relations where user_id = ?", user_id])[0]
     unless user_word_relation.nil?
       doc = user_word_relation.open_file
-      all_dates = doc.root.elements["old_words"].elements["all_date"].text
+      all_dates = doc.root.elements["old_words"].elements["all_date"].text if doc.root.elements["old_words"].elements["all_date"]
       leave_dates = []
       all_dates.split(",").each {|d|
         leave_dates << d if d.to_date < Time.now.to_date
