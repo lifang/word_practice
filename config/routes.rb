@@ -2,7 +2,8 @@ WordPractice::Application.routes.draw do
 
   resources :logins do
     collection do 
-      get :request_qq_web
+      get :request_qq_web,:request_sina,:respond_sina
+      post :manage_qq_web
     end
   end
   resources :words do
