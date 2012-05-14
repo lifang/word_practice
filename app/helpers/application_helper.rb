@@ -1,4 +1,6 @@
 module ApplicationHelper
+  require 'rexml/document'
+  include REXML
 
 # START -------XML文件操作--------require 'rexml/document'----------include REXML----------
 #将XML文件生成document对象

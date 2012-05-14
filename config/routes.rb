@@ -10,6 +10,7 @@ WordPractice::Application.routes.draw do
     collection do
       get :start
     end
+    
   end
  
 

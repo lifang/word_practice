@@ -45,9 +45,8 @@ class WordsController < ApplicationController
   def start
     #统计当天需要背诵的单词
     record = UserWordRelation.find_by_user_id(cookies[:user_id])
-    xml_file = File.open("#{Rails.root}/public/user_word_xml/#{record.practice_url}")
-    xml = Document.new(xml_file)
-    xml_file.close
+    x_url = "#{Rails.root}/public/user_word_xml/#{record.practice_url}"
+    xml = get_doc(x_url)
     review_date = ["#{4.day.ago.to_date}","#{3.day.ago.to_date}","#{2.day.ago.to_date}","#{1.day.ago.to_date}","#{Time.now.to_date}"]
     review_words = []
     review_sum = 0 #复习单词总数
@@ -56,21 +55,25 @@ class WordsController < ApplicationController
       review_words = (review_words<<d_arr).flatten
       review_sum += d_arr.length
     end
-    recite_words = xml.get_elements("/user_words/new_words//word")
-    recite_sum = recite_words.length #新学单词总数
+    @recite_words = xml.get_elements("/user_words/new_words//word")
+    @recite_sum = @recite_words.length #新学单词总数
     
     #XML中的单词数如果少于限制数，则补充新词
-    if recite_sum<NEW_WORDS_SUM && review_sum+recite_sum<LIMIT_WORDS_SUM
-      nw_sum = NEW_WORDS_SUM - recite_sum
+    if @recite_sum<NEW_WORDS_SUM && review_sum+@recite_sum<LIMIT_WORDS_SUM
+      nw_sum = NEW_WORDS_SUM - @recite_sum
       nomal_ids = record.nomal_ids.split(",")
       @new_words = nomal_ids[0,nw_sum]
       record.update_attribute("nomal_ids",nomal_ids[nw_sum..-1].join(","))
-      p @new_words
-
+      new_words_node = xml.root.elements["new_words"]
+      @new_words.each do |word_id|
+        word_node = new_words_node.add_element("word")
+        word_node.add_attribute("id","#{word_id}")
+        word_node.add_attribute("is_error","false")
+        word_node.add_attribute("repeat_time","0")
+      end
+      write_xml(xml,x_url)
     end
-
-
-
+    
   end
   
 
