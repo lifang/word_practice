@@ -9,7 +9,7 @@ WordPractice::Application.routes.draw do
   resources :words do
 
     collection do
-      get :start
+      get :start,:next_word,:know_well
     end
     
   end
