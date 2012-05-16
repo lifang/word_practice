@@ -8,16 +8,16 @@ class LoginsController < ApplicationController
   end
 
   def respond_qq
-    render :inline=>"<script type='text/javascript'>window.location.href=window.location.toString().replace('#','').replace('respond_qq','manage_qq_web');</script>"
+    render :inline=>"<script type='text/javascript'>window.location.href=window.location.toString().replace('#','?').replace('respond_qq','manage_qq_web');</script>"
   end
 
   def manage_qq_web
     begin
-      access_token=params[:access_token]
+      access_token=params[:access_token]|params["?access_token"]
       expires_in=params[:expires_in]
       openid_url="https://graph.z.qq.com"
       openid_para="/moc2/me?access_token=#{access_token}"
-      request_openid=create_get_http(openid_url,openid_para)
+      request_openid=get_openid_http(openid_url,openid_para)
       openid=request_openid.split("openid=")[1]
       @user= User.find_by_open_id(openid)
       first=false
@@ -101,40 +101,39 @@ class LoginsController < ApplicationController
 
   def respond_renren
     if cookies[:oauth2_url_generate]
-      begin
-        cookies.delete(:oauth2_url_generate)
-        access_token=params[:access_token]
-        expires_in=params[:expires_in].to_i
-        response = renren_get_user(access_token)[0]
-        unless response["uid"]
-          redirect_to "/"
-          return false
-        end
-        @user=User.find_by_code_id_and_code_type("#{response["uid"]}","renren")
-        first=false
-        if @user.nil?
-          @user=User.create(:code_id=>response["uid"],:code_type=>'renren',:name=>response["name"], :username=>response["name"],
-            :access_token=>access_token, :end_time=>Time.now+expires_in.seconds, :from => User::U_FROM[:WEB])
-          first=true
-        else
-          ActionLog.login_log(@user.id)
-          if @user.access_token.nil? || @user.access_token=="" || @user.access_token!=access_token
-            @user.update_attributes(:access_token=>access_token,:end_time=>Time.now+expires_in.seconds)
-          end
-        end
-        @user.init_word_list(2)
-        cookies[:user_name] ={:value =>@user.username, :path => "/", :secure  => false}
-        cookies[:user_id] ={:value =>@user.id, :path => "/", :secure  => false}
-        user_word=UserWordRelation.find_by_user_id(cookies[:user_id])
-        user_word.update_attributes(:login_time=>Time.now)
-        unless first
-          render :inline => "<script>;window.opener.location.href='/words';window.close();</script>"
-        else
-          render :inline => "<script>;window.opener.location.href='/logins/lead_one';window.close();</script>"
-        end
-      rescue
-        render :inline => "<script>window.opener.location.reload();window.close();</script>"
+      #      begin
+      cookies.delete(:oauth2_url_generate)
+      access_token=params[:access_token]
+      expires_in=params[:expires_in].to_i
+      response = renren_get_user(access_token)
+      unless response["uid"]
+        redirect_to "/"
+        return false
       end
+      @user=User.find_by_code_id_and_code_type("#{response["uid"]}","renren")
+      first=false
+      if @user.nil?
+        @user=User.create(:code_id=>response["uid"],:code_type=>'renren',:name=>response["name"], :username=>response["name"],
+          :access_token=>access_token, :end_time=>Time.now+expires_in.seconds, :from => User::U_FROM[:WEB])
+        first=true
+      else
+        if @user.access_token.nil? || @user.access_token=="" || @user.access_token!=access_token
+          @user.update_attributes(:access_token=>access_token,:end_time=>Time.now+expires_in.seconds)
+        end
+      end
+      @user.init_word_list(2)
+      cookies[:user_name] ={:value =>@user.username, :path => "/", :secure  => false}
+      cookies[:user_id] ={:value =>@user.id, :path => "/", :secure  => false}
+      user_word=UserWordRelation.find_by_user_id(cookies[:user_id])
+      user_word.update_attributes(:login_time=>Time.now)
+      unless first
+        render :inline => "<script>;window.opener.location.href='/words';window.close();</script>"
+      else
+        render :inline => "<script>;window.opener.location.href='/logins/lead_one';window.close();</script>"
+      end
+      #      rescue
+      #        render :inline => "<script>window.opener.location.reload();window.close();</script>"
+      #      end
     else
       cookies[:oauth2_url_generate]="replace('#','?')"
       render :inline=>"<script type='text/javascript'>window.location.href=window.location.toString().replace('#','?');</script>"

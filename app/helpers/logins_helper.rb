@@ -55,7 +55,7 @@ module LoginsHelper
   end
 
   #openid请求
-  def create_get_http(url,route)
+  def get_openid_http(url,route)
     uri = URI.parse(url)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
@@ -117,7 +117,7 @@ module LoginsHelper
   def renren_api(request)
     uri = URI.parse("http://api.renren.com")
     http = Net::HTTP.new(uri.host, uri.port)
-    response = http.request(request).body
+    return http.request(request).body
   end
   #
   #构成人人签名请求
@@ -136,7 +136,7 @@ module LoginsHelper
   def renren_get_user(access_token)
     query = {:access_token => access_token,:format => 'JSON',:method => 'xiaonei.users.getInfo',:v => '1.0'}
     request = renren_sig_request(query)
-    response = JSON renren_api(request)
+    return JSON renren_api(request)
   end
   #
   #人人发送新鲜事
@@ -171,30 +171,5 @@ module LoginsHelper
     end
   end
 
-  #开心网添加记录
-  def send_message_kaixin(access_token,message)
-    url="https://api.kaixin001.com"
-    info=create_post_http(url,"/records/add.json",{:access_token=>access_token,:content=>message})
-    if info["rid"].nil?
-      p "kaixin error code - #{info["error"]}"
-    else
-      p "kaixin user-record id is  #{info["rid"]}"
-    end
-  end
-
-  #根据用户类型发送消息
-  def send_message(message,user_id)
-    begin
-      user=User.find(user_id)
-      if !user.access_token.nil? and user.access_token!="" and !user.end_time.nil? and user.end_time>Time.now
-        message +="赶考网http://www.gankao.co --#{Time.now.strftime(("%Y-%m-%d"))}"
-        send_message_qq(message,user.open_id,user.access_token,user_id) if user.code_type=="qq" and !user.open_id.nil?
-        renren_send_message(user.access_token,message)  if user.code_type=="renren"
-        sina_send_message(user.access_token,message) if user.code_type=="sina"
-        send_message_kaixin(user.access_token,message) if  user.code_type=="kaixin"
-        sleep 2
-      end
-    rescue
-    end
-  end
+ 
 end
