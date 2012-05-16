@@ -209,3 +209,11 @@ header {
 	padding:0;
 }
 
+/*login----------------*/
+.login li { width: 250px; height: 65px; margin: 20px auto; overflow: hidden; text-indent: -999px;}
+.login_qq { background: url(/assets/login_bg.png) no-repeat 3px 3px;}
+.login_sina { background: url(/assets/login_bg.png) no-repeat 3px -94px;}
+.login_renren { background: url(/assets/login_bg.png) no-repeat 3px -190px;}
+
+/*单词模式选择*/
+.learn_gz li { width: 250px; height: 65px; margin: 20px auto; line-height: 65px; font-size: 24px;}
