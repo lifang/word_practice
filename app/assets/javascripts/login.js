@@ -5,9 +5,8 @@ function read_or(){
         content="此模式要学习单词与词义还有更好的拼读训练，确定要进入吗？";
     }
     if(confirm(content)){
-        window.location.href="/words?action="+which_one;
+        $("#option").submit();
     }else{
         $(":checked").attr("checked",null);
     }
 }
-

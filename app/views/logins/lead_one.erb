@@ -4,9 +4,11 @@
   <div class="space10"></div>
   <h1 class="title">学习模式</h1>
   <section class="m_box angled-135 stripes border_radius">
-    <ul class="learn_gz">
-      <li><input name="words" type="radio" value="0" onclick="read_or()"   /> 认读</li>
-      <li><input name="words" type="radio" value="1" onclick="read_or()" /> 认读+拼写</li>
-    </ul>
+    <%= form_for :option,:url=>"/logins/user_option",:html=>{:id=>"option"} do %>
+      <ul class="learn_gz">
+        <li><input name="words" type="radio" value="0" onclick="read_or()"   /> 认读</li>
+        <li><input name="words" type="radio" value="1" onclick="read_or()" /> 认读+拼写</li>
+      </ul>
+    <% end %>
   </section>
 </section>

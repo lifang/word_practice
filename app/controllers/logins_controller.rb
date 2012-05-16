@@ -1,6 +1,7 @@
 #encoding: utf-8
 class LoginsController < ApplicationController
   include LoginsHelper
+  respond_to :html, :xml, :json
 
   def request_qq_web
     redirect_to "#{LoginsHelper::REQUEST_URL_QQ}?#{LoginsHelper::REQUEST_ACCESS_TOKEN.map{|k,v|"#{k}=#{v}"}.join("&")}"
@@ -118,6 +119,12 @@ class LoginsController < ApplicationController
       cookies[:oauth2_url_generate]="replace('#','?')"
       render :inline=>"<script type='text/javascript'>window.location.href=window.location.toString().replace('#','?');</script>"
     end
+  end
+
+  def user_option
+    cookies[:user_id]=1
+    UserWordRelation.find_by_user_id(cookies[:user_id]).update_attributes(:study_role=>params[:option].to_i)
+    redirect_to "/words"
   end
 
 end

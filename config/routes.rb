@@ -3,11 +3,15 @@ WordPractice::Application.routes.draw do
   resources :logins do
     collection do 
       get :request_qq_web,:request_sina,:respond_sina,:request_renren,:respond_renren,:lead_one
-      post :manage_qq_web
+      post :manage_qq_web,:user_option
     end
   end
   resources :words do
-   
+
+    collection do
+      get :start,:next_word,:know_well
+    end
+    
   end
  
 
