@@ -45,23 +45,10 @@ class WordsController < ApplicationController
     @recite_sum = @recite_words.length #新学单词总数
 
     #XML中的单词数如果少于限制数，则补充新词,一天最多更新一次
-    @update = xml.root.elements["new_words"].attributes["update"]
-    if @update.nil? || @update.to_date.nil? || @update.to_date<Time.now.to_date
-      @update.nil? ? xml.root.elements["new_words"].add_attribute("update", "#{Time.now.to_date}") : @update = "#{Time.now.to_date}"
-      puts @update
-      if @recite_sum<Constant::NEW_WORDS_SUM && @review_sum+@recite_sum<Constant::LIMIT_WORDS_SUM
-        nw_sum = Constant::NEW_WORDS_SUM - @recite_sum
-        nomal_ids = record.nomal_ids.split(",")
-        @new_words = nomal_ids[0,nw_sum]
-        record.update_attribute("nomal_ids",nomal_ids[nw_sum..-1].join(","))
-        new_words_node = xml.root.elements["new_words"]
-        @new_words.each do |word_id|
-          word_node = new_words_node.add_element("word")
-          word_node.add_attribute("id","#{word_id}")
-          word_node.add_attribute("is_error","false")
-          word_node.add_attribute("repeat_time","0")
-        end
-      end
+    last_update = xml.root.elements["new_words"].attributes["update"]
+    if last_update.nil? || last_update.to_date.nil? || last_update.to_date<Time.now.to_date
+      puts "update_newwords #{Time.now.to_date}"
+      xml = update_newwords(xml,@recite_sum,@review_sum,cookies[:user_id])
       write_xml(xml,x_url)
       redirect_to "/words/start"
       return false
@@ -101,61 +88,13 @@ class WordsController < ApplicationController
     word_id = params[:word_id]
     error = params[:error]
     record = UserWordRelation.find_by_user_id(cookies[:user_id])
+    
     x_url = "#{Rails.root}/public/user_word_xml/#{record.practice_url}"
     xml = get_doc(x_url)
-    old_words_node = xml.root.elements["old_words"]
-
-    
-    #新单词
-    if type=="recite"
-      word_node = xml.root.elements["new_words//word[@id='#{word_id}']"]
-      if error == "error"
-        insert_node = xml.root.elements["new_words"]
-        new_word_node = insert_node.add_element("word")
-        manage_element(new_word_node, {}, {:id=>word_id,:is_error=>"true",:repeat_time=>"0"})
-      else
-        if word_node.attributes["is_error"]=="true" && word_node.attributes["repeat_time"].to_i<1
-          insert_node = xml.root.elements["new_words"]
-          new_word_node = insert_node.add_element("word")
-          manage_element(new_word_node, {}, {:id=>word_id,:is_error=>"true",:repeat_time=>word_node.attributes["repeat_time"].to_i+1})
-        else
-          insert_node = old_words_node.elements["_#{Constant::REVIEW_STEP[0][0].day.since.to_date}"]
-          insert_node = old_words_node.add_element("_#{Constant::REVIEW_STEP[0][0].day.since.to_date}") unless insert_node
-          new_word_node = insert_node.add_element("word")
-          manage_element(new_word_node, {}, {:id=>word_id,:step=>1,:start_at=>Constant::REVIEW_STEP[0][0].day.since.to_date,:end_at=>(Constant::REVIEW_STEP[0][0]+Constant::REVIEW_STEP[0][1]).day.since.to_date,:is_error=>"false",:repeat_time=>"0"})
-        end
-      end
-      xml.delete_element(word_node.xpath)
-    end
-
-
-    #复习单词
-    if type=="review"
-      word_node = xml.root.elements["old_words//word[@id='#{word_id}']"]
-      if error == "error"
-        insert_node = xml.root.elements["_#{Time.now.to_date}"]
-        insert_node = old_words_node.add_element("_#{Time.now.to_date}") unless insert_node
-        new_word_node = insert_node.add_element("word")
-        manage_element(new_word_node, {}, {:id=>word_id,:start_at=>word_node.attributes["start_at"],:end_at=>word_node.attributes["end_at"],:step=>word_node.attributes["step"],:is_error=>"true",:repeat_time=>"0"})
-      else
-        if word_node.attributes["is_error"]=="true" && word_node.attributes["repeat_time"].to_i<1
-          insert_node = xml.root.elements["_#{Time.now.to_date}"]
-          insert_node = old_words_node.add_element("_#{Time.now.to_date}") unless insert_node
-          new_word_node = insert_node.add_element("word")
-          manage_element(new_word_node, {}, {:id=>word_id,:start_at=>word_node.attributes["start_at"],:end_at=>word_node.attributes["end_at"],:step=>word_node.attributes["step"],:is_error=>"true",:repeat_time=>word_node.attributes["repeat_time"].to_i+1})
-        else
-          this_step = word_node.attributes["step"].to_i
-          insert_node = old_words_node.elements["_#{Constant::REVIEW_STEP[this_step][0].day.since.to_date}"]
-          insert_node = old_words_node.add_element("_#{Constant::REVIEW_STEP[this_step][0].day.since.to_date}") unless insert_node
-          new_word_node = insert_node.add_element("word")
-          manage_element(new_word_node, {}, {:id=>word_id,:step=>this_step+1,:start_at=>Constant::REVIEW_STEP[this_step][0].day.since.to_date,:end_at=>(Constant::REVIEW_STEP[this_step][0]+Constant::REVIEW_STEP[this_step][1]).day.since.to_date,:is_error=>"false",:repeat_time=>"0"})
-        end
-      end
-      xml.delete_element(word_node.xpath)
-    end
-
-
+    xml = handle_recite_word(xml,word_id,error) if type=="recite"   #处理新背的单词
+    xml = handle_review_word(xml,word_id,error) if type=="review"   #处理复习的单词
     write_xml(xml,x_url)
+    
     redirect_to "/words/start"
   end
 
