@@ -18,5 +18,8 @@ module Constant
   RENREN_CLIENT_ID = "182012"
   RENREN_API_KEY = "98a6ed88bccc409da12a8abe3ebec3c5"
   RENREN_API_SECRET = "0d19833c0bc34a27a58786c07ef8d9fb"
-  
+
+  #每一步的相隔天数以及持续天数  new->step1 = [1,0] , step1->step2 = [2,1] , step2->step3 = [4,2] , step3->step4 = [8,4]
+  REVIEW_STEP = [[1,0],[2,1],[4,2],[8,4]]
+
 end

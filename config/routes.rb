@@ -2,7 +2,7 @@ WordPractice::Application.routes.draw do
 
   resources :logins do
     collection do 
-      get :request_qq_web,:request_sina,:respond_sina,:request_renren,:respond_renren,:lead_one
+      get :request_qq_web,:request_sina,:respond_sina,:request_renren,:respond_renren,:lead_one,:respond_qq
       post :manage_qq_web,:user_option
     end
   end

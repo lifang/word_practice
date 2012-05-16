@@ -29,7 +29,7 @@ class WordsController < ApplicationController
     record = UserWordRelation.find_by_user_id(cookies[:user_id])
     x_url = "#{Rails.root}/public/user_word_xml/#{record.practice_url}"
     xml = get_doc(x_url)
-    review_date = ["#{4.day.ago.to_date}","#{3.day.ago.to_date}","#{2.day.ago.to_date}","#{1.day.ago.to_date}","#{Time.now.to_date}"]
+    review_date = 8.step(0,-1).to_a.collect{|i|i=i.day.ago.to_date}
     @review_words = []
     @review_sum = 0 #复习单词总数
     review_date.each do |date|
@@ -76,13 +76,11 @@ class WordsController < ApplicationController
     end
     @word = PhoneWord.find(@xml_word.attributes["id"])
     @sentences = @word.word_sentences
-    puts "#{@word.id}  #{@web_type}"
-    puts @sentences
     #获取干扰选项
     @other_words = []
-    (0..200).to_a.shuffle.each do |i|
+    (1..200).to_a.shuffle.each do |i|
       break if @other_words.length>=3
-      next if PhoneWord.find(i).nil?
+      next if PhoneWord.find(i).nil? || i==@word.id
       @other_words << PhoneWord.find(i)
     end
   end
@@ -93,27 +91,63 @@ class WordsController < ApplicationController
     #to be continue
     type = params[:type]
     word_id = params[:word_id]
+    error = params[:error]
     record = UserWordRelation.find_by_user_id(cookies[:user_id])
     x_url = "#{Rails.root}/public/user_word_xml/#{record.practice_url}"
     xml = get_doc(x_url)
     old_words_node = xml.root.elements["old_words"]
+
+    
     #新单词
     if type=="recite"
       word_node = xml.root.elements["new_words//word[@id='#{word_id}']"]
-      insert_node = old_words_node.elements["_#{1.day.since.to_date}"]
-      insert_node = old_words_node.add_element("_#{1.day.since.to_date}") unless insert_node
-      new_word_node = insert_node.add_element("word")
-      manage_element(new_word_node, {}, {:id=>word_id,:step=>1,:start_at=>1.day.since.to_date,:end_at=>1.day.since.to_date,:is_error=>"false",:repeat_time=>"0"})
+      if error == "error"
+        insert_node = xml.root.elements["new_words"]
+        new_word_node = insert_node.add_element("word")
+        manage_element(new_word_node, {}, {:id=>word_id,:is_error=>"true",:repeat_time=>"0"})
+      else
+        if word_node.attributes["is_error"]=="true" && word_node.attributes["repeat_time"].to_i<1
+          insert_node = xml.root.elements["new_words"]
+          new_word_node = insert_node.add_element("word")
+          manage_element(new_word_node, {}, {:id=>word_id,:is_error=>"true",:repeat_time=>word_node.attributes["repeat_time"].to_i+1})
+        else
+          insert_node = old_words_node.elements["_#{Constant::REVIEW_STEP[0][0].day.since.to_date}"]
+          insert_node = old_words_node.add_element("_#{Constant::REVIEW_STEP[0][0].day.since.to_date}") unless insert_node
+          new_word_node = insert_node.add_element("word")
+          manage_element(new_word_node, {}, {:id=>word_id,:step=>1,:start_at=>Constant::REVIEW_STEP[0][0].day.since.to_date,:end_at=>(Constant::REVIEW_STEP[0][0]+Constant::REVIEW_STEP[0][1]).day.since.to_date,:is_error=>"false",:repeat_time=>"0"})
+        end
+      end
       xml.delete_element(word_node.xpath)
     end
 
+
     #复习单词
     if type=="review"
-      
+      word_node = xml.root.elements["old_words//word[@id='#{word_id}']"]
+      if error == "error"
+        insert_node = xml.root.elements["_#{Time.now.to_date}"]
+        insert_node = old_words_node.add_element("_#{Time.now.to_date}") unless insert_node
+        new_word_node = insert_node.add_element("word")
+        manage_element(new_word_node, {}, {:id=>word_id,:start_at=>word_node.attributes["start_at"],:end_at=>word_node.attributes["end_at"],:step=>word_node.attributes["step"],:is_error=>"true",:repeat_time=>"0"})
+      else
+        if word_node.attributes["is_error"]=="true" && word_node.attributes["repeat_time"].to_i<1
+          insert_node = xml.root.elements["_#{Time.now.to_date}"]
+          insert_node = old_words_node.add_element("_#{Time.now.to_date}") unless insert_node
+          new_word_node = insert_node.add_element("word")
+          manage_element(new_word_node, {}, {:id=>word_id,:start_at=>word_node.attributes["start_at"],:end_at=>word_node.attributes["end_at"],:step=>word_node.attributes["step"],:is_error=>"true",:repeat_time=>word_node.attributes["repeat_time"].to_i+1})
+        else
+          this_step = word_node.attributes["step"].to_i
+          insert_node = old_words_node.elements["_#{Constant::REVIEW_STEP[this_step][0].day.since.to_date}"]
+          insert_node = old_words_node.add_element("_#{Constant::REVIEW_STEP[this_step][0].day.since.to_date}") unless insert_node
+          new_word_node = insert_node.add_element("word")
+          manage_element(new_word_node, {}, {:id=>word_id,:step=>this_step+1,:start_at=>Constant::REVIEW_STEP[this_step][0].day.since.to_date,:end_at=>(Constant::REVIEW_STEP[this_step][0]+Constant::REVIEW_STEP[this_step][1]).day.since.to_date,:is_error=>"false",:repeat_time=>"0"})
+        end
+      end
+      xml.delete_element(word_node.xpath)
     end
-    write_xml(xml,x_url)
-    #render :inline=>"#{type} #{word_id} #{1.day.since.to_date}"
 
+
+    write_xml(xml,x_url)
     redirect_to "/words/start"
   end
 
