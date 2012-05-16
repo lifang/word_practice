@@ -15,7 +15,7 @@ class WordsController < ApplicationController
       return false
     end
     user_id = cookies[:user_id]
-    @study_time = @user.user_word_relation.all_study_time
+    @study_time = @user.user_word_relation.all_study_time.nil? ? 0 : @user.user_word_relation.all_study_time
     @time_str = "#{(@study_time/86400).to_s.rjust(2,"0")}#{(@study_time%86400/3600).to_s.rjust(2,"0")}#{(@study_time%86400%3600/60).to_s.rjust(2,"0")}#{(@study_time%60).to_s.rjust(2,"0")}"
     @circle_data = @user.circle_data
   end
@@ -33,6 +33,7 @@ class WordsController < ApplicationController
     record = UserWordRelation.find_by_user_id(cookies[:user_id])
     x_url = "#{Rails.root}/public/user_word_xml/#{record.practice_url}"
     xml = get_doc(x_url)
+
     review_date = 8.step(0,-1).to_a.collect{|i|i=i.day.ago.to_date}
     @review_words = []
     @review_sum = 0 #复习单词总数
@@ -43,9 +44,9 @@ class WordsController < ApplicationController
     end
     @recite_words = xml.get_elements("/user_words/new_words//word")
     @recite_sum = @recite_words.length #新学单词总数
-    @update = xml.root.elements["new_words"].attributes["update"]
 
     #XML中的单词数如果少于限制数，则补充新词,一天最多更新一次
+    @update = xml.root.elements["new_words"].attributes["update"]
     if @update.nil? || @update.to_date.nil? || @update.to_date<Time.now.to_date
       @update.nil? ? xml.root.elements["new_words"].add_attribute("update", "#{Time.now.to_date}") : @update = "#{Time.now.to_date}"
       puts @update
@@ -66,7 +67,7 @@ class WordsController < ApplicationController
       redirect_to "/words/start"
       return false
     end
-    
+
     #当前背诵的单词,review_words的第一个，没有则选new_words第一个,全没有，则表示当天单词背诵完成
     if @review_sum > 0
       @xml_word = @review_words[0]
@@ -80,6 +81,7 @@ class WordsController < ApplicationController
         return false
       end
     end
+    
     @word = PhoneWord.find(@xml_word.attributes["id"])
     @sentences = @word.word_sentences
     #获取干扰选项
@@ -89,6 +91,7 @@ class WordsController < ApplicationController
       next if PhoneWord.find(i).nil? || i==@word.id
       @other_words << PhoneWord.find(i)
     end
+    
   end
 
 

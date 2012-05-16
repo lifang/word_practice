@@ -10,6 +10,7 @@
   script.src = url;
   document.body.appendChild(script);
   function callback(user){
+    alert(user.openid);
     $.ajax({
       async:true,
       type: "POST",
