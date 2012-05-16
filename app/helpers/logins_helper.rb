@@ -55,7 +55,7 @@ module LoginsHelper
   end
 
   #openid请求
-  def create_get_http(url,route)
+  def get_openid_http(url,route)
     uri = URI.parse(url)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true

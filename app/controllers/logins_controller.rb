@@ -17,7 +17,7 @@ class LoginsController < ApplicationController
       expires_in=params[:expires_in]
       openid_url="https://graph.z.qq.com"
       openid_para="/moc2/me?access_token=#{access_token}"
-      request_openid=create_get_http(openid_url,openid_para)
+      request_openid=get_openid_http(openid_url,openid_para)
       openid=request_openid.split("openid=")[1]
       @user= User.find_by_open_id(openid)
       first=false
