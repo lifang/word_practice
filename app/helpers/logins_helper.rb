@@ -54,6 +54,17 @@ module LoginsHelper
     return JSON back_res.body
   end
 
+  #openid请求
+  def create_get_http(url,route)
+    uri = URI.parse(url)
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    request= Net::HTTP::Get.new(route)
+    back_res =http.request(request)
+    return back_res.body
+  end
+
   #新浪微博添加关注
   def request_weibo(access_token,code_id,data)
     weibo_url="https://api.weibo.com"
@@ -137,64 +148,16 @@ module LoginsHelper
   #
   #END -------人人API----------
 
-
-  #START -------开心网API----------
-  #
-  #开心主方法
-  def kaixin_api(request)
-    uri = URI.parse("https://api.kaixin001.com")
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    response = http.request(request).body
+  def init_word_list(category_id)
+    if self.user_word_relation.nil?
+      phone_words = PhoneWord.find_by_sql("select id from phone_words order by level, rand()")
+      word_ids = []
+      word_ids = phone_words.collect { |item| item.id }
+      practice_url = self.write_file(self.xml_content, Time.now.strftime("%Y_%m_%d"), "xml", "user_word_xml")
+      UserWordRelation.create(:user_id => self.id, :nomal_ids => word_ids.join(","), :category_id => category_id,
+        :login_time => Time.now.to_datetime, :practice_url => practice_url)
+    end
   end
-  #
-  #开心获取accesstoken
-  def kaixin_accesstoken(code)
-    request = Net::HTTP::Get.new("/oauth2/access_token?grant_type=authorization_code&code=#{code}&client_id=#{Constant::KAIXIN_API_KEY}&client_secret=#{Constant::KAIXIN_API_SECRET}&redirect_uri=#{Constant::SERVER_PATH}/logins/respond_kaixin")
-    response = JSON kaixin_api(request)
-  end
-  #
-  #开心获取用户信息
-  def kaixin_get_user(access_token)
-    request = Net::HTTP::Get.new("/users/me.json?access_token=#{access_token}")
-    response = JSON kaixin_api(request)
-  end
-  #
-  #END -------开心网API----------
-
-
-  #START -------百度API----------
-  #
-  #百度主方法
-  def baidu_api(request)
-    uri = URI.parse("https://openapi.baidu.com")
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    response = http.request(request).body
-  end
-  #
-  #百度获取accesstoken
-  def baidu_accesstoken(code)
-    request = Net::HTTP::Get.new("/oauth/2.0/token?grant_type=authorization_code&code=#{code}&client_id=#{Constant::BAIDU_API_KEY}&client_secret=#{Constant::BAIDU_API_SECRET}&redirect_uri=#{Constant::SERVER_PATH}/logins/respond_baidu")
-    response = JSON baidu_api(request)
-  end
-  #
-  #百度获取用户信息
-  def baidu_get_user(access_token)
-    request = Net::HTTP::Get.new("/users/me.json?access_token=#{access_token}")
-    response = JSON baidu_api(request)
-  end
-  #
-  #
-  #百度获取用户信息
-  def baidu_get_user(access_token)
-    request = Net::HTTP::Get.new("/rest/2.0/passport/users/getLoggedInUser?access_token=#{access_token}")
-    response = JSON baidu_api(request)
-  end
-  #
-  #END -------百度API----------
 
 
   #qq添加说说

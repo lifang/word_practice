@@ -8,15 +8,17 @@ class LoginsController < ApplicationController
   end
 
   def respond_qq
-    
+    render :inline=>"<script type='text/javascript'>window.location.href=window.location.toString().replace('#','').replace('respond_qq','manage_qq_web');</script>"
   end
 
   def manage_qq_web
     begin
-      meters=params[:access_token].split("&")
-      access_token=meters[0].split("=")[1]
-      expires_in=meters[1].split("=")[1].to_i
-      openid=params[:open_id]
+      access_token=params[:access_token]
+      expires_in=params[:expires_in]
+      openid_url="https://graph.z.qq.com"
+      openid_para="/moc2/me?access_token=#{access_token}"
+      request_openid=create_get_http(openid_url,openid_para)
+      openid=request_openid.split("openid=")[1]
       @user= User.find_by_open_id(openid)
       first=false
       if @user.nil?
@@ -26,31 +28,26 @@ class LoginsController < ApplicationController
         user_info["nickname"]="qq用户" if user_info["nickname"].nil?||user_info["nickname"]==""
         @user=User.create(:code_type=>'qq',:name=>user_info["nickname"], :username=>user_info["nickname"],
           :open_id=>openid , :access_token=>access_token, :end_time=>Time.now+expires_in.seconds, :from => User::U_FROM[:WEB])
-        init_word_list(2)
         first=true
       else
         if @user.access_token.nil? || @user.access_token=="" || @user.access_token!=access_token
           @user.update_attributes(:access_token=>access_token,:end_time=>Time.now+expires_in.seconds)
         end
       end
+      @user.init_word_list(2)
       cookies[:user_id] ={:value =>@user.id, :path => "/", :secure  => false}
       cookies[:user_name] ={:value =>@user.username, :path => "/", :secure  => false}
       user_word=UserWordRelation.find_by_user_id(cookies[:user_id])
       user_word.update_attributes(:login_time=>Time.now)
       unless first
-        redirect='/words'
+        render :inline => "<script>;window.opener.location.href='/words';window.close();</script>"
       else
-        redirect='/logins/lead_one'
+        render :inline => "<script>;window.opener.location.href='/logins/lead_one';window.close();</script>"
       end
-      data=true
     rescue
-      data=false
+      render :inline => "<script>window.opener.location.reload();window.close();</script>"
     end
-    respond_to do |format|
-      format.json {
-        render :json=>{:go=>data,:redirect=>redirect}
-      }
-    end
+  
   end
 
 
@@ -74,13 +71,12 @@ class LoginsController < ApplicationController
             :name=>response["screen_name"], :username=>response["screen_name"], :access_token=>access_token,
             :end_time=>Time.now+expires_in.seconds, :from => User::U_FROM[:WEB])
           first=true
-          init_word_list(2)
         else
           if @user.access_token.nil? || @user.access_token=="" || @user.access_token!=access_token
             @user.update_attributes(:access_token=>access_token,:end_time=>Time.now+expires_in.seconds)
           end
         end
-        init_word_list(2)
+        @user.init_word_list(2)
         cookies[:user_name] = {:value =>@user.username, :path => "/", :secure  => false}
         cookies[:user_id] = {:value =>@user.id, :path => "/", :secure  => false}
         user_word=UserWordRelation.find_by_user_id(cookies[:user_id])
@@ -120,13 +116,13 @@ class LoginsController < ApplicationController
           @user=User.create(:code_id=>response["uid"],:code_type=>'renren',:name=>response["name"], :username=>response["name"],
             :access_token=>access_token, :end_time=>Time.now+expires_in.seconds, :from => User::U_FROM[:WEB])
           first=true
-          init_word_list(2)
         else
           ActionLog.login_log(@user.id)
           if @user.access_token.nil? || @user.access_token=="" || @user.access_token!=access_token
             @user.update_attributes(:access_token=>access_token,:end_time=>Time.now+expires_in.seconds)
           end
         end
+        @user.init_word_list(2)
         cookies[:user_name] ={:value =>@user.username, :path => "/", :secure  => false}
         cookies[:user_id] ={:value =>@user.id, :path => "/", :secure  => false}
         user_word=UserWordRelation.find_by_user_id(cookies[:user_id])
