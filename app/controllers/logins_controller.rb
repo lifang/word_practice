@@ -37,9 +37,9 @@ class LoginsController < ApplicationController
       user_word=UserWordRelation.find_by_user_id(cookies[:user_id])
       user_word.update_attributes(:login_time=>Time.now)
       unless first
-        render :inline => "<script>;window.opener.location.href='/words';window.close();</script>"
+        redirect='/words'
       else
-        render :inline => "<script>;window.opener.location.href='/logins/lead_one';window.close();</script>"
+        redirect='/logins/lead_one'
       end
       data=true
     rescue
@@ -47,7 +47,7 @@ class LoginsController < ApplicationController
     end
     respond_to do |format|
       format.json {
-        render :json=>data
+        render :json=>{:go=>data,:redirect=>redirect}
       }
     end
   end
