@@ -18,7 +18,7 @@ class LoginsController < ApplicationController
       openid_url="https://graph.z.qq.com"
       openid_para="/moc2/me?access_token=#{access_token}"
       request_openid=create_get_http(openid_url,openid_para)
-      openid=request_openid.split("openid")[1]
+      openid=request_openid.split("openid=")[1]
       @user= User.find_by_open_id(openid)
       first=false
       if @user.nil?
