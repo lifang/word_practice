@@ -71,7 +71,7 @@ class LoginsController < ApplicationController
         cookies[:user_name] = {:value =>@user.username, :path => "/", :secure  => false}
         cookies[:user_id] = {:value =>@user.id, :path => "/", :secure  => false}
         user_role?(cookies[:user_id])
-        render :inline => "<script> ;window.opener.location.href='/words';window.close();</script>"
+        render :inline => "<script> ;window.opener.location.href='/logins/lead_one';window.close();</script>"
       rescue
         render :inline => "<script>window.opener.location.reload();window.close();</script>"
       end
@@ -110,7 +110,7 @@ class LoginsController < ApplicationController
         cookies[:user_name] ={:value =>@user.username, :path => "/", :secure  => false}
         cookies[:user_id] ={:value =>@user.id, :path => "/", :secure  => false}
         user_role?(cookies[:user_id])
-        render :inline => "<script>;window.opener.location.href='/words';window.close();</script>"
+        render :inline => "<script>;window.opener.location.href='/logins/lead_one';window.close();</script>"
       rescue
         render :inline => "<script>window.opener.location.reload();window.close();</script>"
       end
