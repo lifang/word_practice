@@ -17,7 +17,7 @@ class LoginsController < ApplicationController
       expires_in=params[:expires_in]
       openid_url="https://graph.z.qq.com"
       openid_para="/moc2/me?access_token=#{access_token}"
-      request_openid=create_get_http(openid_url,openid_para)
+      request_openid=get_openid_http(openid_url,openid_para)
       openid=request_openid.split("openid=")[1]
       @user= User.find_by_open_id(openid)
       first=false
@@ -101,7 +101,7 @@ class LoginsController < ApplicationController
 
   def respond_renren
     if cookies[:oauth2_url_generate]
-      begin
+#      begin
         cookies.delete(:oauth2_url_generate)
         access_token=params[:access_token]
         expires_in=params[:expires_in].to_i
@@ -132,9 +132,9 @@ class LoginsController < ApplicationController
         else
           render :inline => "<script>;window.opener.location.href='/logins/lead_one';window.close();</script>"
         end
-      rescue
-        render :inline => "<script>window.opener.location.reload();window.close();</script>"
-      end
+#      rescue
+#        render :inline => "<script>window.opener.location.reload();window.close();</script>"
+#      end
     else
       cookies[:oauth2_url_generate]="replace('#','?')"
       render :inline=>"<script type='text/javascript'>window.location.href=window.location.toString().replace('#','?');</script>"
