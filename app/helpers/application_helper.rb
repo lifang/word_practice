@@ -1,3 +1,4 @@
+#encoding: utf-8
 module ApplicationHelper
   require 'rexml/document'
   include REXML
