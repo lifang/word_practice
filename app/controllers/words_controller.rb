@@ -64,12 +64,14 @@ class WordsController < ApplicationController
     @word = PhoneWord.find(@xml_word.attributes["id"])
     @sentences = @word.word_sentences
     #获取干扰选项
-    @other_words = []
-    (1..200).to_a.shuffle.each do |i|
-      break if @other_words.length>=3
-      next if PhoneWord.find(i).nil? || i==@word.id
-      @other_words << PhoneWord.find(i)
-    end
+#    @other_words = []
+#    (1..200).to_a.shuffle.each do |i|
+#      break if @other_words.length>=3
+#      next if PhoneWord.find(i).nil? || i==@word.id
+#      @other_words << PhoneWord.find(i)
+#    end
+    @other_words = PhoneWord.get_words_by_level(@word.level, 3)
+
   end
 
 
