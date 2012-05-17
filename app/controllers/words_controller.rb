@@ -9,6 +9,10 @@ class WordsController < ApplicationController
     @user = User.find(cookies[:user_id])
     @user.init_word_list(2)  # 用户第一次登录，创建数据库记录，以及XML文件
     @user.makeup_oldwords(cookies[:user_id])  # 根据xml内容更新数据库
+    if @user.user_word_relation.nil?
+      redirect_to "/words"
+      return false
+    end
     user_id = cookies[:user_id]
     @study_time = @user.user_word_relation.all_study_time
     @time_str = "#{(@study_time/86400).to_s.rjust(2,"0")}#{(@study_time%86400/3600).to_s.rjust(2,"0")}#{(@study_time%86400%3600/60).to_s.rjust(2,"0")}#{(@study_time%60).to_s.rjust(2,"0")}"
@@ -44,8 +48,8 @@ class WordsController < ApplicationController
     if @update.nil? || @update.to_date.nil? || @update.to_date<Time.now.to_date
       @update.nil? ? xml.root.elements["new_words"].add_attribute("update", "#{Time.now.to_date}") : @update = "#{Time.now.to_date}"
       puts @update
-      if @recite_sum<NEW_WORDS_SUM && @review_sum+@recite_sum<LIMIT_WORDS_SUM
-        nw_sum = NEW_WORDS_SUM - @recite_sum
+      if @recite_sum<Constant::NEW_WORDS_SUM && @review_sum+@recite_sum<Constant::LIMIT_WORDS_SUM
+        nw_sum = Constant::NEW_WORDS_SUM - @recite_sum
         nomal_ids = record.nomal_ids.split(",")
         @new_words = nomal_ids[0,nw_sum]
         record.update_attribute("nomal_ids",nomal_ids[nw_sum..-1].join(","))
@@ -58,6 +62,8 @@ class WordsController < ApplicationController
         end
       end
       write_xml(xml,x_url)
+      redirect_to "/words/start"
+      return false
     end
     
     #当前背诵的单词,review_words的第一个，没有则选new_words第一个,全没有，则表示当天单词背诵完成
