@@ -2,8 +2,8 @@ WordPractice::Application.routes.draw do
 
   resources :logins do
     collection do 
-      get :request_qq_web,:request_sina,:respond_sina,:request_renren,:respond_renren
-      post :manage_qq_web
+      get :request_qq_web,:request_sina,:respond_sina,:request_renren,:respond_renren,:lead_one,:respond_qq
+      post :manage_qq_web,:user_option
     end
   end
   resources :words do
@@ -65,7 +65,7 @@ WordPractice::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  root :to => 'words#index'
+  root :to => 'logins#index'
 
   # See how all your routes lay out with "rake routes"
 

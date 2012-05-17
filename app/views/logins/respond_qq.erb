@@ -20,9 +20,8 @@
         access_token:accessToken
       },
       success: function(data){
-        var url = "/logins";
-        if(data){
-          window.opener.location.href=url;
+        if(data.go){
+          window.opener.location.href=data.redirect;
           window.close();
         }else{
           window.opener.location.reload();
