@@ -28,12 +28,10 @@ class WordsController < ApplicationController
 
   #开始学习
   def start
-    
     #统计当天需要背诵的单词
     record = UserWordRelation.find_by_user_id(cookies[:user_id])
     x_url = "#{Rails.root}/public/user_word_xml/#{record.practice_url}"
     xml = get_doc(x_url)
-
     review_date = 8.step(0,-1).to_a.collect{|i|i=i.day.ago.to_date}
     @review_words = []
     @review_sum = 0 #复习单词总数
@@ -44,31 +42,25 @@ class WordsController < ApplicationController
     end
     @recite_words = xml.get_elements("/user_words/new_words//word")
     @recite_sum = @recite_words.length #新学单词总数
-
     #XML中的单词数如果少于限制数，则补充新词,一天最多更新一次
     last_update = xml.root.elements["new_words"].attributes["update"]
     if last_update.nil? || last_update.to_date.nil? || last_update.to_date<Time.now.to_date
-      puts "update_newwords #{Time.now.to_date}"
       xml = update_newwords(xml,@recite_sum,@review_sum,cookies[:user_id])
       write_xml(xml,x_url)
       redirect_to "/words/start"
       return false
     end
-
     #当前背诵的单词,review_words的第一个，没有则选new_words第一个,全没有，则表示当天单词背诵完成
     if @review_sum > 0
-      @xml_word = @review_words[0]
-      @web_type = "review"
+      @xml_word,@web_type = @review_words[0],"review"
     else
       if @recite_sum > 0
-        @xml_word = @recite_words[0]
-        @web_type = "recite"
+        @xml_word,@web_type = @recite_words[0],"recite"
       else
         render :inline=>"当天的单词已经全部背诵完，Congratulation :)"
         return false
       end
     end
-    
     @word = PhoneWord.find(@xml_word.attributes["id"])
     @sentences = @word.word_sentences
     #获取干扰选项
@@ -78,7 +70,6 @@ class WordsController < ApplicationController
       next if PhoneWord.find(i).nil? || i==@word.id
       @other_words << PhoneWord.find(i)
     end
-    
   end
 
 
@@ -89,13 +80,11 @@ class WordsController < ApplicationController
     word_id = params[:word_id]
     error = params[:error]
     record = UserWordRelation.find_by_user_id(cookies[:user_id])
-    
     x_url = "#{Rails.root}/public/user_word_xml/#{record.practice_url}"
     xml = get_doc(x_url)
     xml = handle_recite_word(xml,word_id,error) if type=="recite"   #处理新背的单词
     xml = handle_review_word(xml,word_id,error) if type=="review"   #处理复习的单词
     write_xml(xml,x_url)
-    
     redirect_to "/words/start"
   end
 
