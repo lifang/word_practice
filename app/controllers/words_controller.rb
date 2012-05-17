@@ -50,6 +50,57 @@ class WordsController < ApplicationController
       redirect_to "/words/start"
       return false
     end
+
+    #当前背诵的单词,review_words的第一个，没有则选new_words第一个,全没有，则表示当天单词背诵完成
+    if @review_sum > 0
+      @xml_word,@web_type = @review_words[0],"review"
+    else
+      if @recite_sum > 0
+        @xml_word,@web_type = @recite_words[0],"recite"
+      else
+        render :inline=>"当天的单词已经全部背诵完，Congratulation :)"
+        return false
+      end
+    end
+    
+    @word = PhoneWord.find(@xml_word.attributes["id"])
+    @sentences = @word.word_sentences
+    #获取干扰选项
+
+#     @other_words = []
+#    PhoneWord.all.shuffle.each do |phone_word|
+#      break if @other_words.length>=3
+#      next if phone_word.id==@word.id
+#      @other_words << phone_word
+#    end
+    @other_words = PhoneWord.get_words_by_level(@word.level, 3)
+  end
+
+
+  #继续学习
+  def ajax_next_word
+    #to be continue
+    type = params[:type]
+    word_id = params[:word_id]
+    error = params[:error]
+    record = UserWordRelation.find_by_user_id(cookies[:user_id])
+    x_url = "#{Rails.root}/public/user_word_xml/#{record.practice_url}"
+    xml = get_doc(x_url)
+    xml = handle_recite_word(xml,word_id,error) if type=="recite"   #处理新背的单词
+    xml = handle_review_word(xml,word_id,error) if type=="review"   #处理复习的单词
+    write_xml(xml,x_url)
+
+    review_date = 8.step(0,-1).to_a.collect{|i|i=i.day.ago.to_date}
+    @review_words = []
+    @review_sum = 0 #复习单词总数
+    review_date.each do |date|
+      d_arr = xml.get_elements("/user_words/old_words/_#{date}//word")
+      @review_words = (@review_words<<d_arr).flatten
+      @review_sum += d_arr.length
+    end
+    @recite_words = xml.get_elements("/user_words/new_words//word")
+    @recite_sum = @recite_words.length #新学单词总数
+
     #当前背诵的单词,review_words的第一个，没有则选new_words第一个,全没有，则表示当天单词背诵完成
     if @review_sum > 0
       @xml_word,@web_type = @review_words[0],"review"
@@ -64,47 +115,64 @@ class WordsController < ApplicationController
     @word = PhoneWord.find(@xml_word.attributes["id"])
     @sentences = @word.word_sentences
     #获取干扰选项
-#    @other_words = []
-#    (1..200).to_a.shuffle.each do |i|
-#      break if @other_words.length>=3
-#      next if PhoneWord.find(i).nil? || i==@word.id
-#      @other_words << PhoneWord.find(i)
-#    end
-    @other_words = PhoneWord.get_words_by_level(@word.level, 3)
+    @other_words = []
+    PhoneWord.all.shuffle.each do |phone_word|
+      break if @other_words.length>=3
+      next if phone_word.id==@word.id
+      @other_words << phone_word
+    end
+    render :partial=>"/words/ajax_source.html",:object=>{:word=>@word,:web_type=>@web_type,:sentences=>@sentences,:other_words=>@other_words}
 
-  end
-
-
-  #继续学习
-  def next_word
-    #to be continue
-    type = params[:type]
-    word_id = params[:word_id]
-    error = params[:error]
-    record = UserWordRelation.find_by_user_id(cookies[:user_id])
-    x_url = "#{Rails.root}/public/user_word_xml/#{record.practice_url}"
-    xml = get_doc(x_url)
-    xml = handle_recite_word(xml,word_id,error) if type=="recite"   #处理新背的单词
-    xml = handle_review_word(xml,word_id,error) if type=="review"   #处理复习的单词
-    write_xml(xml,x_url)
-    redirect_to "/words/start"
   end
 
   #已经掌握
-  def know_well
+  def ajax_know_well
     #to be continue
+    type = params[:type]
     word_id = params[:word_id]
     record = UserWordRelation.find_by_user_id(cookies[:user_id])
     x_url = "#{Rails.root}/public/user_word_xml/#{record.practice_url}"
     xml = get_doc(x_url)
-    word_node = xml.root.elements["new_words//word[@id='#{word_id}']"]
-    word_node = xml.root.elements["old_words//word[@id='#{word_id}']"] unless word_node
+    word_node = xml.root.elements["new_words//word[@id='#{word_id}']"] if type == "recite"
+    word_node = xml.root.elements["old_words//word[@id='#{word_id}']"] if type == "review"
     xml.delete_element(word_node.xpath)
     write_xml(xml,x_url)
     recite_ids = record.recite_ids.nil? ? "" : record.recite_ids
     recite_ids = (recite_ids.split(",")<<word_id).join(",")
     record.update_attribute("recite_ids",recite_ids)
-    redirect_to "/words/start"
+    
+    review_date = 8.step(0,-1).to_a.collect{|i|i=i.day.ago.to_date}
+    @review_words = []
+    @review_sum = 0 #复习单词总数
+    review_date.each do |date|
+      d_arr = xml.get_elements("/user_words/old_words/_#{date}//word")
+      @review_words = (@review_words<<d_arr).flatten
+      @review_sum += d_arr.length
+    end
+    @recite_words = xml.get_elements("/user_words/new_words//word")
+    @recite_sum = @recite_words.length #新学单词总数
+
+    #当前背诵的单词,review_words的第一个，没有则选new_words第一个,全没有，则表示当天单词背诵完成
+    if @review_sum > 0
+      @xml_word,@web_type = @review_words[0],"review"
+    else
+      if @recite_sum > 0
+        @xml_word,@web_type = @recite_words[0],"recite"
+      else
+        render :inline=>"当天的单词已经全部背诵完，Congratulation :)"
+        return false
+      end
+    end
+    @word = PhoneWord.find(@xml_word.attributes["id"])
+    @sentences = @word.word_sentences
+    #获取干扰选项
+    @other_words = []
+    PhoneWord.all.shuffle.each do |phone_word|
+      break if @other_words.length>=3
+      next if phone_word.id==@word.id
+      @other_words << phone_word
+    end
+    render :partial=>"/words/ajax_source.html",:object=>{:word=>@word,:web_type=>@web_type,:sentences=>@sentences,:other_words=>@other_words}
   end
   
 
