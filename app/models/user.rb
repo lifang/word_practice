@@ -105,7 +105,7 @@ class User < ActiveRecord::Base
 
 
   #返回 [已掌握 初步掌握 未掌握],如 [35,35,30],3个元素相加等于100
-  def circle_data()
+  def circle_data
     result = {}
     record = UserWordRelation.find_by_user_id(self.id)
     nomal_ids = record.nomal_ids.nil? ? [] : record.nomal_ids.split(",")

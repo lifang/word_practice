@@ -1,3 +1,4 @@
+#encoding: utf-8
 module ApplicationHelper
   require 'rexml/document'
   include REXML
@@ -149,12 +150,7 @@ module ApplicationHelper
     word = PhoneWord.find(xml_word.attributes["id"])
     sentences = word.word_sentences
     #获取干扰选项
-    other_words = []
-    PhoneWord.all.shuffle.each do |phone_word|
-      break if other_words.length>=3
-      next if phone_word.id==word.id
-      other_words << phone_word
-    end
+    other_words = PhoneWord.get_words_by_level(word.level, 3)
     return {:word=>word,:web_type=>web_type,:sentences=>sentences,:other_words=>other_words}
   end
 

@@ -1,3 +1,4 @@
+#encoding: utf-8
 class WordsController < ApplicationController
   require 'rexml/document'
   include REXML
@@ -44,6 +45,7 @@ class WordsController < ApplicationController
       return false
     end
     @word,@web_type,@sentences,@other_words = source[:word],source[:web_type],source[:sentences],source[:other_words]
+
   end
 
 

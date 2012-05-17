@@ -38,9 +38,9 @@ class LoginsController < ApplicationController
       user_word=UserWordRelation.find_by_user_id(cookies[:user_id])
       user_word.update_attributes(:login_time=>Time.now)
       unless user_word.study_role.nil?
-        render :inline => "<script>;window.opener.location.href='/words';window.close();</script>"
+        render :inline=>"<script type='text/javascript'>window.location.href='/words';</script>"
       else
-        render :inline => "<script>;window.opener.location.href='/logins/lead_one';window.close();</script>"
+        render :inline=>"<script type='text/javascript'>window.location.href='/logins/lead_one';</script>"
       end
     rescue
       render :inline => "<script>window.opener.location.reload();window.close();</script>"
