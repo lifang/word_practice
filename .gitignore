@@ -27,7 +27,7 @@ test/tmp
 test/version_tmp
 tmp
 word_datas
-
+user_word_xml
 # YARD artifacts
 .yardoc
 _yardoc

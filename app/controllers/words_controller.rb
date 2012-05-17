@@ -28,6 +28,7 @@ class WordsController < ApplicationController
   #开始学习
   def start
     record = UserWordRelation.find_by_user_id(cookies[:user_id])
+    cookies[:study_role] = record.study_role
     x_url = "#{Rails.root}/public/user_word_xml/#{record.practice_url}"
     xml = get_doc(x_url)
     #XML中的单词数如果少于限制数，则补充新词,一天最多更新一次
