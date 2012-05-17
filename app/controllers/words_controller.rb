@@ -88,13 +88,11 @@ class WordsController < ApplicationController
     word_id = params[:word_id]
     error = params[:error]
     record = UserWordRelation.find_by_user_id(cookies[:user_id])
-    
     x_url = "#{Rails.root}/public/user_word_xml/#{record.practice_url}"
     xml = get_doc(x_url)
     xml = handle_recite_word(xml,word_id,error) if type=="recite"   #处理新背的单词
     xml = handle_review_word(xml,word_id,error) if type=="review"   #处理复习的单词
     write_xml(xml,x_url)
-    
     redirect_to "/words/start"
   end
 
