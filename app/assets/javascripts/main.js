@@ -22,6 +22,9 @@ var local_timer = null;
 var local_save_time = null;
 function local_save_start() {
     local_save_time = new Date();
+    if (parseInt(local_start_time) == parseFloat(local_start_time)) {
+        $(".count_down").html(local_start_time);
+    }
     local_timer = self.setInterval(function(){
         local_save();
     }, 100);
@@ -31,11 +34,16 @@ function local_save_start() {
 function local_save() {
     var start_date = new Date();
     if (local_start_time <= 0) {
+        if (parseInt(local_start_time) == parseFloat(local_start_time)) {
+            $(".count_down").html(0);
+        }
         window.clearInterval(local_timer);
         have_a_rest();
         return;
     }
-
+    if (parseInt(local_start_time) == parseFloat(local_start_time)) {
+        $(".count_down").html(local_start_time);
+    }
     var end_date = new Date();
     if ((end_date - local_save_time) > 100 && (end_date - local_save_time) < 1000) {
         local_start_time = Math.round((local_start_time - (end_date - local_save_time)/1000)*10)/10;
@@ -45,7 +53,31 @@ function local_save() {
     local_save_time = end_date;
 }
 
-//休息提示
 function have_a_rest() {
-    
+    $("#tishi_zz").show();
+    $("#jizhong_tab").show();
 }
+
+function reset_clock() {
+    window.clearInterval(local_timer);
+    local_start_time = 5;
+    local_save_time = null;
+}
+
+function restart_clock() {
+    $("#tishi_zz").hide();
+    $("#jizhong_tab").hide();
+    reset_clock();
+    local_save_start();
+}
+
+function closeme(){
+    alert(2);
+    $("#tishi_zz").hide();
+    $("#jizhong_tab").hide();
+    window.close();
+}
+
+$(document).ready(function(){
+    local_save_start();
+})

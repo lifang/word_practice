@@ -217,3 +217,5 @@ header {
 
 /*单词模式选择*/
 .learn_gz li { width: 250px; height: 65px; margin: 20px auto; line-height: 65px; font-size: 24px;}
+
+.count_down {float: right;background: url(/assets/time_bg.png) no-repeat left center;padding-left: 20px;}
