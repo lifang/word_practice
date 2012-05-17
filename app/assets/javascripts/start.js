@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(loaded, 200);
 }, false);
 
-
 function rollback(){
     $("#step"+step).hide();
     step = 5;
@@ -52,6 +51,7 @@ function next_step(){
 }
 
 function answer_correct(){
+    $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
     $("#mask").show();
     $("#correct").show();
     correct_sum += 1;
@@ -61,6 +61,7 @@ function answer_correct(){
 }
 
 function answer_mistake(){
+    $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
     $("#error").val("error");
     $("#mask").show();
     $("#mistake").show();
@@ -71,6 +72,7 @@ function ignore_mistake(){
 }
 
 function click_knowwell(){
+    $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
     $("#mask").show();
     $("#knowwell").show();
 }
@@ -90,12 +92,14 @@ function check_step4_input(){
 
 //继续学习
 function ajax_next_word(){
+    $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
     var error = $("#error").val();
     $('#ajax_loading').load("/words/ajax_next_word?word_id="+word_id+"&type="+web_type+"&error="+error);
 }
 
-//继续学习
+//已经掌握
 function ajax_know_well(){
+    $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
     $('#ajax_loading').load("/words/ajax_know_well?word_id="+word_id+"&type="+web_type);
 }
 
