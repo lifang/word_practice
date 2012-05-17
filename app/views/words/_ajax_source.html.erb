@@ -1,9 +1,8 @@
 <% @word=ajax_source[:word]; @web_type=ajax_source[:web_type]; @sentences=ajax_source[:sentences]; @other_words=ajax_source[:other_words] %>
 <link href="/assets/style.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="/assets/jquery-1.7.js"></script>
+    <%= javascript_include_tag "application" %>
 <script type="text/javascript" src="/assets/main.js"></script>
-<script type="text/javascript" src="/assets/iscroll.js"></script>
-<script type="text/javascript" src="/assets/word.js"></script>
+<script type="text/javascript" src="/assets/start.js"></script>
 <script type="text/javascript">
   var word_name = "<%= @word.name.strip %>";
   var word_id = "<%= @word.id %>";
@@ -18,14 +17,7 @@
 
 </script>
 
-<header>
-  <div class="top_line"></div>
-  <div class="back border_radius" onclick="javascript:window.location.href='/words'">返回</div>
-  <h1 class="h_title">大学英语四级词汇</h1>
-</header>
 
-<section class="main" id="wrapper">
-  <div id="scroller">
     <% if @web_type == "recite" %>
 
       <div id="step1">
@@ -198,28 +190,28 @@
       </section>
     </div>
 
-  </div>
-</section>
+    <div class="mask" id="mask" style="display:none;"></div>
+    <article class="t_area" id="correct" style="display:none;">
+      <div class="t_icon"><img src="/assets/true_icon.png" alt="true_icon"/></div>
+      <h1>答对了！</h1>
+      <div class="t_btn border_radius" id="after_four_correct" style="display:none;" onclick="javascript:hide_mask($('#correct'));click_knowwell();"><h2>已经掌握</h2></div>
+      <div class="t_btn border_radius" onclick="javascript:hide_mask($('#correct'));rollback();"><h2>翻面学习</h2></div>
+      <div class="t_btn border_radius" onclick="javascript:hide_mask($('#correct'));next_step();"><h2>继续(<span id="step1_correct_countdown">5</span>)</h2></div>
+    </article>
+    <article class="t_area" id="mistake" style="display:none;">
+      <div class="t_icon"><img src="/assets/false_icon.png" alt="false_icon"/></div>
+      <h1>答错了！</h1>
+      <div class="t_btn border_radius" onclick="javascript:ignore_mistake();hide_mask($('#mistake'));"><h2>按错了，不算</h2></div>
+      <div class="t_btn border_radius" onclick="javascript:hide_mask($('#mistake'));rollback();"><h2>继续(<span id="step1_correct_countdown">5</span>)</h2></div>
+    </article>
+    <article class="t_area" id="knowwell" style="display:none;">
+      <div class="t_icon"><img src="/assets/suo_icon.png" /></div>
+      <h1>确认你已经掌握了吗？</h1>
+      <div class="t_btn border_radius" onclick="javascript:ajax_know_well();"><h2>确认</h2><p>标记该单词为"已学会",并开始学习下一单词</p></div>
+      <div class="t_btn border_radius" onclick="javascript:hide_mask($('#knowwell'));"><h2>不确认</h2><p>返回继续学习该单词</p></div>
+    </article>
+    <input id="error" type="hidden" value=""></input>
 
-<div class="mask" id="mask" style="display:none;"></div>
-<article class="t_area" id="correct" style="display:none;">
-  <div class="t_icon"><img src="/assets/true_icon.png" alt="true_icon"/></div>
-  <h1>答对了！</h1>
-  <div class="t_btn border_radius" id="after_four_correct" style="display:none;" onclick="javascript:hide_mask($('#correct'));click_knowwell();"><h2>已经掌握</h2></div>
-  <div class="t_btn border_radius" onclick="javascript:hide_mask($('#correct'));rollback();"><h2>翻面学习</h2></div>
-  <div class="t_btn border_radius" onclick="javascript:hide_mask($('#correct'));next_step();"><h2>继续(<span id="step1_correct_countdown">5</span>)</h2></div>
-</article>
-<article class="t_area" id="mistake" style="display:none;">
-  <div class="t_icon"><img src="/assets/false_icon.png" alt="false_icon"/></div>
-  <h1>答错了！</h1>
-  <div class="t_btn border_radius" onclick="javascript:ignore_mistake();hide_mask($('#mistake'));"><h2>按错了，不算</h2></div>
-  <div class="t_btn border_radius" onclick="javascript:hide_mask($('#mistake'));rollback();"><h2>继续(<span id="step1_correct_countdown">5</span>)</h2></div>
-</article>
-<article class="t_area" id="knowwell" style="display:none;">
-  <div class="t_icon"><img src="/assets/suo_icon.png" /></div>
-  <h1>确认你已经掌握了吗？</h1>
-  <div class="t_btn border_radius" onclick="javascript:ajax_know_well(<%= @word.id %>);"><h2>确认</h2><p>标记该单词为"已学会",并开始学习下一单词</p></div>
-  <div class="t_btn border_radius" onclick="javascript:hide_mask($('#knowwell'));"><h2>不确认</h2><p>返回继续学习该单词</p></div>
-</article>
 
-<input id="error" type="hidden" value=""></input>
+
+
