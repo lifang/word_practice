@@ -65,25 +65,6 @@ module LoginsHelper
     return back_res.body
   end
 
-  #新浪微博添加关注
-  def request_weibo(access_token,code_id,data)
-    weibo_url="https://api.weibo.com"
-    weibo_route="/2/friendships/show.json?access_token=#{access_token}&source_id=#{code_id}&target_id=#{Oauth2Helper::WEIBO_ID}"
-    user_info=create_get_http(weibo_url,weibo_route)
-    unless user_info["source"]["following"]
-      params={ :access_token=>access_token,:screen_name=>Oauth2Helper::WEIBO_NAME,:uid=>Oauth2Helper::WEIBO_ID}
-      action="/2/friendships/create.json"
-      add_info=create_post_http(weibo_url,action,params)
-      if add_info["following"]
-        data="关注成功"
-      end
-    else
-      data="您已关注"
-    end
-    return data
-  end
-
-
   #START -------新浪微博API----------
   #
   #新浪微博主方法
@@ -148,16 +129,6 @@ module LoginsHelper
   #
   #END -------人人API----------
 
-  def init_word_list(category_id)
-    if self.user_word_relation.nil?
-      phone_words = PhoneWord.find_by_sql("select id from phone_words order by level, rand()")
-      word_ids = []
-      word_ids = phone_words.collect { |item| item.id }
-      practice_url = self.write_file(self.xml_content, Time.now.strftime("%Y_%m_%d"), "xml", "user_word_xml")
-      UserWordRelation.create(:user_id => self.id, :nomal_ids => word_ids.join(","), :category_id => category_id,
-        :login_time => Time.now.to_datetime, :practice_url => practice_url)
-    end
-  end
 
 
   #qq添加说说
