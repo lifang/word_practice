@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(loaded, 200);
 }, false);
 
-
 function rollback(){
     $("#step"+step).hide();
     step = 5;

@@ -15,6 +15,7 @@
     $(".to_be_sort").reorder();
   });
 
+
 </script>
 
 
@@ -22,14 +23,9 @@
 
       <div id="step1">
         <section class="m_box angled-135 stripes border_radius">
-          <div class="m_bt">看单词选意思。<span class="count_down">50</span></div>
+          <div class="m_bt">看单词,选择下面的词义。<span onclick="javascript:close_window();">关闭</span><span class="count_down">50</span></div>
           <article class="words_audio">
             <h3><%= @word.name %></h3>
-            <div class="play_audio">Play</div>
-            <audio preload="preload" loop>
-              <source src="<%= "#{Constant::SERVER_PATH}#{@word.enunciate_url}" %>" type="audio/mpeg"/>
-              您的浏览器不支持 audio 标签。
-            </audio>
           </article>
           <div class="to_be_sort">
             <section class="words_list border_radius">
@@ -54,7 +50,7 @@
 
       <div id="step2" style="display:none;">
         <section class="m_box angled-135 stripes border_radius">
-          <div class="m_bt">看意思选单词。<span class="count_down">50</span></div>
+          <div class="m_bt">看词义，选择对应的单词。<span class="count_down">50</span></div>
           <article class="words_audio">
             <h3><%= @word.ch_mean %></h3>
           </article>
