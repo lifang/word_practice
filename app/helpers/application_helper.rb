@@ -92,7 +92,7 @@ module ApplicationHelper
       manage_element(new_word_node, {}, {:id=>word_id,:start_at=>word_node.attributes["start_at"],:end_at=>word_node.attributes["end_at"],:step=>word_node.attributes["step"],:is_error=>"true",:repeat_time=>"0"})
     else
       if word_node.attributes["is_error"]=="true" && word_node.attributes["repeat_time"].to_i<1
-        insert_node = xml.root.elements["_#{Time.now.to_date}"]
+        insert_node = old_words_node.elements["_#{Time.now.to_date}"]
         insert_node = old_words_node.add_element("_#{Time.now.to_date}") unless insert_node
         new_word_node = insert_node.add_element("word")
         manage_element(new_word_node, {}, {:id=>word_id,:start_at=>word_node.attributes["start_at"],:end_at=>word_node.attributes["end_at"],:step=>word_node.attributes["step"],:is_error=>"true",:repeat_time=>word_node.attributes["repeat_time"].to_i+1})
