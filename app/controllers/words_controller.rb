@@ -45,7 +45,7 @@ class WordsController < ApplicationController
       return false
     end
     @word,@web_type,@sentences,@other_words = source[:word],source[:web_type],source[:sentences],source[:other_words]
-
+    render :layout=>false
   end
 
 
