@@ -50,17 +50,15 @@ module ApplicationHelper
     recite_sum = recite_words.length #新学单词总数
     new_words_node = xml.root.elements["new_words"]
     record = UserWordRelation.find_by_user_id(user_id)
-    new_words_node.attributes["update"].nil? ? new_words_node.add_attribute("update", "#{Time.now.to_date}") : new_words_node.attributes["update"] = "#{Time.now.to_date}"
+    #new_words_node.attributes["update"].nil? ? new_words_node.add_attribute("update", "#{Time.now.to_date}") : new_words_node.attributes["update"] = "#{Time.now.to_date}"
     if recite_sum<Constant::NEW_WORDS_SUM && review_sum+recite_sum<Constant::LIMIT_WORDS_SUM
       nw_sum = Constant::NEW_WORDS_SUM - recite_sum
       nomal_ids = record.nomal_ids.split(",")
       new_words = nomal_ids[0,nw_sum]
       record.update_attribute("nomal_ids",nomal_ids[nw_sum..-1].nil? ? "" : nomal_ids[nw_sum..-1].join(","))
       new_words.each do |word_id|
-        word_node = new_words_node.add_element("word")
-        word_node.add_attribute("id","#{word_id}")
-        word_node.add_attribute("is_error","false")
-        word_node.add_attribute("repeat_time","0")
+        new_words_node.add_element("word",
+          {"id"=>"#{word_id}", "is_error" => "false", "repeat_time" => "0", "step" => "0"})
       end
     end
     return xml
@@ -150,8 +148,8 @@ module ApplicationHelper
     word = PhoneWord.find(xml_word.attributes["id"])
     sentences = word.word_sentences
     #获取干扰选项
-    other_words = PhoneWord.get_words_by_level(word.level, 3)
-    return {:word=>word,:web_type=>web_type,:sentences=>sentences,:other_words=>other_words}
+    other_words = PhoneWord.get_words_by_level(word.level, 10)
+    return {:word=>word,:web_type=>web_type,:sentences=>sentences,:other_words=>(other_words.sort_by{rand})[0,3]}
   end
 
 end

@@ -5,7 +5,7 @@ class WordsController < ApplicationController
   layout "application"
   
   def index
-    cookies[:user_id]=1
+    cookies[:user_id]=2
     cookies[:user_name]="jeffrey6052"
     #---------------------------------------------------硬写 cookies
     @user = User.find(cookies[:user_id])
@@ -29,11 +29,11 @@ class WordsController < ApplicationController
     x_url = "#{Rails.root}/public/#{record.practice_url}"
     xml = get_doc(x_url)
     #XML中的单词数如果少于限制数，则补充新词,一天最多更新一次
-    last_update = xml.root.elements["new_words"].attributes["update"]
-    if last_update.nil? || last_update.to_date.nil? || last_update.to_date<Time.now.to_date
+    #last_update = xml.root.elements["new_words"].attributes["update"]
+    #if last_update.nil? || last_update.to_date.nil? || last_update.to_date<Time.now.to_date
       xml = update_newwords(xml,cookies[:user_id])
       write_xml(xml,x_url)
-    end
+    #end
     #获取单词数据
     source = word_source(xml)
     if source.nil?

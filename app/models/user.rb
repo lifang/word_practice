@@ -35,6 +35,10 @@ class User < ActiveRecord::Base
       from user_word_relations where user_id = ?", user_id])[0]
     unless user_word_relation.nil?
       doc = user_word_relation.open_file
+      recite_words = doc.get_elements("/user_words/new_words//word")
+      recite_words.each do |e|
+        e.add_attribute("step", "0")
+      end
       all_dates = doc.root.elements["old_words"].elements["all_date"].text if doc.root.elements["old_words"].elements["all_date"]
       leave_dates = []
       all_dates.split(",").each {|d|
@@ -47,7 +51,7 @@ class User < ActiveRecord::Base
           word_list.each_element {|w|
             if w.attributes["step"].to_i == REPEAT_STATUS["L"]
               doc.root.elements["new_words"].add_element("word",
-                {"id"=>"#{w.attributes["id"]}", "is_error" => "false", "repeat_time" => "0"})
+                {"id"=>"#{w.attributes["id"]}", "is_error" => "false", "repeat_time" => "0", "step" => "0"})
               doc.delete_element(w.xpath)
             else
               if w.attributes["end_at"].to_date < Time.now.to_date
@@ -58,7 +62,7 @@ class User < ActiveRecord::Base
                 
                 doc.root.elements["old_words"].elements["_#{new_start_date}"].add_element("word",
                   {"step" => "#{w.attributes["step"].to_i - 1}", "start_at" => new_start_date, "end_at" => end_date,
-                      "is_error" => "false", "repeat_time" => "0", "id" => w.attributes["id"]})
+                    "is_error" => "false", "repeat_time" => "0", "id" => w.attributes["id"]})
                 doc.delete_element(w.xpath)
               end
             end
@@ -69,9 +73,7 @@ class User < ActiveRecord::Base
         end
       } unless leave_dates.blank?
       path_url = user_word_relation.practice_url.split("/")
-
-      puts doc
-      user_word_relation.user.write_file(doc.to_s, path_url[1], "xml", "user_word_xml")
+      user_word_relation.user.write_file(doc.to_s, path_url[2], "xml", "user_word_xml")
     end
   end
 
