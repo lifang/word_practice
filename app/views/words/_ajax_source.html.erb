@@ -1,6 +1,7 @@
 <% @word=ajax_source[:word]; @web_type=ajax_source[:web_type]; @sentences=ajax_source[:sentences]; @other_words=ajax_source[:other_words] %>
 <link href="/assets/style.css" rel="stylesheet" type="text/css"/>
 <%= javascript_include_tag "application" %>
+<script type="text/javascript" src="/assets/iscroll.js"></script>
 <script type="text/javascript" src="/assets/main.js"></script>
 <script type="text/javascript" src="/assets/start.js"></script>
 <script type="text/javascript">
@@ -10,11 +11,6 @@
   var myScroll;
   var step= web_type=="recite" ? 1 : 4;
   var correct_sum = 0;
-
-  $(function(){
-    $(".to_be_sort").reorder();
-  });
-
 </script>
 
 <% if @web_type == "recite" %>
@@ -31,7 +27,7 @@
   <h1>答对了！</h1>
   <div class="t_btn border_radius" id="after_four_correct" style="display:none;" onclick="javascript:hide_mask($('#correct'));click_knowwell();"><h2>已经掌握</h2></div>
   <div class="t_btn border_radius" onclick="javascript:study_rollback();"><h2>翻面学习</h2></div>
-  <div class="t_btn border_radius" onclick="javascript:goto_next('correct');"><h2>继续(<span id="countdown_correct">3</span>)</h2></div>
+  <div class="t_btn border_radius" id="correct_next_btn" onclick="javascript:goto_next('correct');"><h2>继续(<span id="countdown_correct">3</span>)</h2></div>
 </article>
 <article class="t_area" id="mistake" style="display:none;">
   <div class="t_icon"><img src="/assets/false_icon.png" alt="false_icon"/></div>
@@ -46,5 +42,9 @@
   <div class="t_btn border_radius" onclick="javascript:hide_mask($('#knowwell'));"><h2>不确认</h2><p>返回继续学习该单词</p></div>
 </article>
 <input id="error" type="hidden" value=""></input>
+
+<script type="text/javascript">
+    $(".to_be_sort").reorder();
+</script>
 
 <%= render :partial => "/words/tishi_tab" %>

@@ -6,7 +6,7 @@ module Constant
   PUBLIC_PATH = "#{Rails.root}/public"
   
   #新单词上限
-  NEW_WORDS_SUM = 50
+  NEW_WORDS_SUM = 10
 
   #用户XML中总单词上限
   LIMIT_WORDS_SUM = 200

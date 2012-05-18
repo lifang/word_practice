@@ -1,9 +1,9 @@
-<% if true %>
+<% if cookies[:study_role].nil? || cookies[:study_role]=="0" %>
   <div id="step4" <% if @web_type=="recite" %> style="display:none;" <% end %> >
     <section class="m_box angled-135 stripes border_radius">
       <div class="m_bt">看句子选单词。<span class="count_down">50</span></div>
       <article class="words_audio">
-        <h3><%= @sentences[-1].description.sub("#{@word.name}","________").sub("#{@word.capitalize}","________"); %></h3>
+        <h3><%= @sentences[-1].description.sub("#{@word.name}","________").sub("#{@word.name.capitalize}","________"); %></h3>
       </article>
       <div class="to_be_sort">
         <section class="words_list border_radius">

@@ -5,19 +5,20 @@ class WordsController < ApplicationController
   layout "application"
   
   def index
-    cookies[:user_id]=1
+    cookies[:user_id]=2
     cookies[:user_name]="jeffrey6052"
     #---------------------------------------------------硬写 cookies
     @user = User.find(cookies[:user_id])
     @user.init_word_list(2)  # 用户第一次登录，创建数据库记录，以及XML文件
-    @user.makeup_oldwords(cookies[:user_id])  # 根据xml内容更新数据库
-    if @user.user_word_relation.nil?
+    @user.makeup_oldwords(cookies[:user_id])  # 根据xml内容更新数据库   
+    @record = @user.user_word_relation
+    if @record.nil?
       redirect_to "/words"
       return false
     end
-    @study_time = @user.user_word_relation.all_study_time.nil? ? 0 : @user.user_word_relation.all_study_time
+    @study_time = @record.all_study_time.nil? ? 0 : @record.all_study_time
     @time_str = "#{(@study_time/86400).to_s.rjust(2,"0")}#{(@study_time%86400/3600).to_s.rjust(2,"0")}#{(@study_time%86400%3600/60).to_s.rjust(2,"0")}#{(@study_time%60).to_s.rjust(2,"0")}"
-    @circle_data = @user.circle_data
+    @circle_data = @user.circle_data 
   end
 
 
@@ -39,7 +40,7 @@ class WordsController < ApplicationController
       return false
     end
     @word,@web_type,@sentences,@other_words = source[:word],source[:web_type],source[:sentences],source[:other_words]
-
+    render :layout=>false
   end
 
 
@@ -55,7 +56,12 @@ class WordsController < ApplicationController
     xml = handle_recite_word(xml,word_id,error) if type=="recite"   #处理新背的单词
     xml = handle_review_word(xml,word_id,error) if type=="review"   #处理复习的单词
     write_xml(xml,x_url)
-    render :partial=>"/words/ajax_source",:object=>word_source(xml)
+    source = word_source(xml)
+    if source
+      render :partial=>"/words/ajax_source",:object=>source
+    else
+      redirect_to "/words/start"
+    end
   end
 
   #已经掌握
@@ -73,7 +79,12 @@ class WordsController < ApplicationController
     recite_ids = record.recite_ids.nil? ? "" : record.recite_ids
     recite_ids = (recite_ids.split(",")<<word_id).join(",")
     record.update_attribute("recite_ids",recite_ids)
-    render :partial=>"/words/ajax_source",:object=>word_source(xml)
+    source = word_source(xml)
+    if source
+      render :partial=>"/words/ajax_source",:object=>source
+    else
+      redirect_to "/words/start"
+    end
   end
   
 
