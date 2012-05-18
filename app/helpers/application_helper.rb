@@ -70,18 +70,20 @@ module ApplicationHelper
     word_node = xml.root.elements["new_words//word[@id='#{word_id}']"]
     if error == "error"
       insert_node = xml.root.elements["new_words"]
-      new_word_node = insert_node.add_element("word")
-      manage_element(new_word_node, {}, {:id=>word_id,:is_error=>"true",:repeat_time=>"0"})
+      insert_node.add_element("word", {:id => word_id, :is_error => "true",
+          :repeat_time => "0", :step => "#{User::NEW_WORD_STEP[0]}"})
     else
       if word_node.attributes["is_error"]=="true" && word_node.attributes["repeat_time"].to_i<1
         insert_node = xml.root.elements["new_words"]
-        new_word_node = insert_node.add_element("word")
-        manage_element(new_word_node, {}, {:id=>word_id,:is_error=>"true",:repeat_time=>word_node.attributes["repeat_time"].to_i+1})
+        insert_node.add_element("word",
+          {:id=>word_id,:is_error=>"true",:repeat_time=>word_node.attributes["repeat_time"].to_i+1})
       else
         insert_node = old_words_node.elements["_#{Constant::REVIEW_STEP[0][0].day.since.to_date}"]
         insert_node = old_words_node.add_element("_#{Constant::REVIEW_STEP[0][0].day.since.to_date}") unless insert_node
-        new_word_node = insert_node.add_element("word")
-        manage_element(new_word_node, {}, {:id=>word_id,:step=>1,:start_at=>Constant::REVIEW_STEP[0][0].day.since.to_date,:end_at=>(Constant::REVIEW_STEP[0][0]+Constant::REVIEW_STEP[0][1]).day.since.to_date,:is_error=>"false",:repeat_time=>"0"})
+        insert_node.add_element("word",
+          {:id => word_id, :step => "#{User::OLD_WORD_TIME[0]}", :start_at => Constant::REVIEW_STEP[0][0].day.since.to_date,
+            :end_at => (Constant::REVIEW_STEP[0][0]+Constant::REVIEW_STEP[0][1]).day.since.to_date,
+            :is_error => "false", :repeat_time => "0"})
       end
     end
     xml.delete_element(word_node.xpath)
@@ -95,21 +97,24 @@ module ApplicationHelper
     if error == "error"
       insert_node = xml.root.elements["_#{Time.now.to_date}"]
       insert_node = old_words_node.add_element("_#{Time.now.to_date}") unless insert_node
-      new_word_node = insert_node.add_element("word")
-      manage_element(new_word_node, {}, {:id=>word_id,:start_at=>word_node.attributes["start_at"],:end_at=>word_node.attributes["end_at"],:step=>word_node.attributes["step"],:is_error=>"true",:repeat_time=>"0"})
+      insert_node.add_element("word", {:id => word_id, :start_at => word_node.attributes["start_at"],
+          :end_at => word_node.attributes["end_at"],:step => word_node.attributes["step"],:is_error => "true",:repeat_time => "0"})
     else
       if word_node.attributes["is_error"]=="true" && word_node.attributes["repeat_time"].to_i<1
         insert_node = old_words_node.elements["_#{Time.now.to_date}"]
         insert_node = old_words_node.add_element("_#{Time.now.to_date}") unless insert_node
-        new_word_node = insert_node.add_element("word")
-        manage_element(new_word_node, {}, {:id=>word_id,:start_at=>word_node.attributes["start_at"],:end_at=>word_node.attributes["end_at"],:step=>word_node.attributes["step"],:is_error=>"true",:repeat_time=>word_node.attributes["repeat_time"].to_i+1})
+        insert_node.add_element("word", {:id => word_id, :start_at => word_node.attributes["start_at"],
+            :end_at => word_node.attributes["end_at"], :step => word_node.attributes["step"], :is_error => "true",
+            :repeat_time => word_node.attributes["repeat_time"].to_i+1})
       else
         this_step = word_node.attributes["step"].to_i
-        if this_step<4
+        if this_step < User::OLD_WORD_TIME[3]
           insert_node = old_words_node.elements["_#{Constant::REVIEW_STEP[this_step][0].day.since.to_date}"]
           insert_node = old_words_node.add_element("_#{Constant::REVIEW_STEP[this_step][0].day.since.to_date}") unless insert_node
-          new_word_node = insert_node.add_element("word")
-          manage_element(new_word_node, {}, {:id=>word_id,:step=>this_step+1,:start_at=>Constant::REVIEW_STEP[this_step][0].day.since.to_date,:end_at=>(Constant::REVIEW_STEP[this_step][0]+Constant::REVIEW_STEP[this_step][1]).day.since.to_date,:is_error=>"false",:repeat_time=>"0"})
+          insert_node.add_element("word", {:id => word_id, :step => this_step+1,
+              :start_at => Constant::REVIEW_STEP[this_step][0].day.since.to_date,
+              :end_at => (Constant::REVIEW_STEP[this_step][0]+Constant::REVIEW_STEP[this_step][1]).day.since.to_date,
+              :is_error => "false",:repeat_time => "0"})
         else
           record = UserWordRelation.find_by_user_id(cookies[:user_id])
           recite_ids = record.recite_ids.nil? ? "" : record.recite_ids
