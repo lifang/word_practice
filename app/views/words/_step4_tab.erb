@@ -1,5 +1,5 @@
 <% if cookies[:study_role].nil? || cookies[:study_role]=="0" %>
-  <div id="step4" <% if @web_type=="recite" %> style="display:none;" <% end %> >
+  <div id="face">
     <section class="m_box angled-135 stripes border_radius">
       <div class="m_bt">看句子选单词。<span class="count_down">50</span></div>
       <article class="words_audio">
@@ -22,7 +22,7 @@
     </section>
   </div>
 <% else %>
-  <div id="step4" <% if @web_type=="recite" %> style="display:none;" <% end %> >
+  <div id="face">
     <section class="m_box angled-135 stripes border_radius">
       <div class="m_bt">在输入框中拼写单词。<span class="count_down">50</span></div>
       <section class="example_list">

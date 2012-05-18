@@ -5,7 +5,7 @@
 <section class="main" id="wrapper">
   <div id="scroller">
     <div id="ajax_loading">
-      <%= render :partial=>"/words/ajax_source",:object=>{:word=>@word,:web_type=>@web_type,:sentences=>@sentences,:other_words=>@other_words} %>
+      <%= render :partial=>"/words/ajax_source",:object=>@source %>
     </div>
   </div>
 </section>
