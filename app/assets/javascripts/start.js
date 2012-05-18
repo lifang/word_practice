@@ -38,12 +38,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function rollback(){
     $("#step"+step).hide();
-    step = 5;
+    step = 5;    
     $("#step5").show();
     $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
+    //翻面学习清空倒计时
+    reset_clock(5);
 }
 
 function next_step(){
+    if(step==4 && $("#error").val()!="error"){
+        ajax_next_word();
+        return false;
+    }
     $("#step"+step).hide();
     step += 1;
     $("#step"+step).show();
@@ -54,10 +60,12 @@ function answer_correct(){
     $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
     $("#mask").show();
     $("#correct").show();
-    correct_sum += 1;
-    if(correct_sum>=4){
+    if(step==4 && $("#error").val()!="error"){
         $("#after_four_correct").show();
+        $("#correct_next_btn").attr("onclick","javascript:ajax_next_word()");
     }
+    reset_clock(3);
+    local_save_start("correct");
 }
 
 function answer_mistake(){
@@ -65,6 +73,38 @@ function answer_mistake(){
     $("#error").val("error");
     $("#mask").show();
     $("#mistake").show();
+
+    reset_clock(3);
+    local_save_start("mistake");
+}
+
+//继续
+function goto_next(flag) {
+    if (flag == "correct") {
+        hide_mask($('#correct'));
+        next_step();
+        //开始下一步的倒计时
+        reset_clock(5);
+        local_save_start("clock");
+    } else {
+        hide_mask($('#mistake'));
+        rollback();        
+    }
+    
+}
+
+//按错了
+function reset_answer() {
+    ignore_mistake();
+    hide_mask($('#mistake'));
+    reset_clock(5);
+    local_save_start("clock");
+}
+
+//翻面学习
+function study_rollback() {
+    hide_mask($('#correct'));
+    rollback();
 }
 
 function ignore_mistake(){

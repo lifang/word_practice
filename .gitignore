@@ -32,3 +32,4 @@ user_word_xml
 .yardoc
 _yardoc
 doc/
+public/user_word_xml/*.*

@@ -1,6 +1,7 @@
 <% @word=ajax_source[:word]; @web_type=ajax_source[:web_type]; @sentences=ajax_source[:sentences]; @other_words=ajax_source[:other_words] %>
 <link href="/assets/style.css" rel="stylesheet" type="text/css"/>
 <%= javascript_include_tag "application" %>
+<script type="text/javascript" src="/assets/iscroll.js"></script>
 <script type="text/javascript" src="/assets/main.js"></script>
 <script type="text/javascript" src="/assets/start.js"></script>
 <script type="text/javascript">
@@ -185,14 +186,14 @@
   <div class="t_icon"><img src="/assets/true_icon.png" alt="true_icon"/></div>
   <h1>答对了！</h1>
   <div class="t_btn border_radius" id="after_four_correct" style="display:none;" onclick="javascript:hide_mask($('#correct'));click_knowwell();"><h2>已经掌握</h2></div>
-  <div class="t_btn border_radius" onclick="javascript:hide_mask($('#correct'));rollback();"><h2>翻面学习</h2></div>
-  <div class="t_btn border_radius" onclick="javascript:hide_mask($('#correct'));next_step();"><h2>继续(<span id="step1_correct_countdown">5</span>)</h2></div>
+  <div class="t_btn border_radius" onclick="javascript:study_rollback();"><h2>翻面学习</h2></div>
+  <div class="t_btn border_radius" id="correct_next_btn" onclick="javascript:goto_next('correct');"><h2>继续(<span id="countdown_correct">3</span>)</h2></div>
 </article>
 <article class="t_area" id="mistake" style="display:none;">
   <div class="t_icon"><img src="/assets/false_icon.png" alt="false_icon"/></div>
   <h1>答错了！</h1>
-  <div class="t_btn border_radius" onclick="javascript:ignore_mistake();hide_mask($('#mistake'));"><h2>按错了，不算</h2></div>
-  <div class="t_btn border_radius" onclick="javascript:hide_mask($('#mistake'));rollback();"><h2>继续(<span id="step1_correct_countdown">5</span>)</h2></div>
+  <div class="t_btn border_radius" onclick="javascript:reset_answer();"><h2>按错了，不算</h2></div>
+  <div class="t_btn border_radius" onclick="javascript:goto_next('mistake');"><h2>继续(<span id="countdown_mistake">3</span>)</h2></div>
 </article>
 <article class="t_area" id="knowwell" style="display:none;">
   <div class="t_icon"><img src="/assets/suo_icon.png" /></div>

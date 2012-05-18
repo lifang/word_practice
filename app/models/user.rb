@@ -88,7 +88,7 @@ class User < ActiveRecord::Base
     f=File.new(url,"w+")
     f.write("#{str.force_encoding('UTF-8')}")
     f.close
-    return file_name
+    return "/#{super_path}" + file_name
   end
 
   #创建xml文件
@@ -112,7 +112,7 @@ class User < ActiveRecord::Base
     nomal_sum = nomal_ids.length
     recite_ids = record.recite_ids.nil? ? [] : record.recite_ids.split(",")
     recite_sum = recite_ids.length
-    xml_file = File.open("#{Rails.root}/public/user_word_xml/#{record.practice_url}")
+    xml_file = File.open("#{Rails.root}/public#{record.practice_url}")
     xml = Document.new(xml_file)
     xml_file.close
     new_sum = xml.get_elements("/user_words/new_words//word").length
