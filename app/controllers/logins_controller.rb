@@ -136,6 +136,7 @@ class LoginsController < ApplicationController
 
   def user_option
     UserWordRelation.find_by_user_id(cookies[:user_id]).update_attributes(:study_role=>params[:option].to_i)
+    
     redirect_to "/words"
   end
 

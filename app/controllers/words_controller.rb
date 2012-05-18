@@ -12,6 +12,7 @@ class WordsController < ApplicationController
     @user.init_word_list(2)  # 用户第一次登录，创建数据库记录，以及XML文件
     @user.makeup_oldwords(cookies[:user_id])  # 根据xml内容更新数据库   
     @record = @user.user_word_relation
+    cookies[:study_role] = @record.study_role
     if @record.nil?
       redirect_to "/words"
       return false
