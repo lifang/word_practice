@@ -40,7 +40,6 @@ class WordsController < ApplicationController
       render :inline=>"当天单词已背完，Congratulation :)"
       return false
     end
-    #@word,@web_type,@sentences,@other_words,@step = source[:word],source[:web_type],source[:sentences],source[:other_words],source[:step]
     render :layout=>false
   end
 

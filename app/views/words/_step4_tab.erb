@@ -1,9 +1,9 @@
 <% if cookies[:study_role].nil? || cookies[:study_role]=="0" %>
   <div id="face">
     <section class="m_box angled-135 stripes border_radius">
-      <div class="m_bt">看句子选单词。<span class="count_down">50</span></div>
+      <div class="m_bt">看句子选单词。<span class="count_down">5</span></div>
       <article class="words_audio">
-        <h3><%= @sentences[-1].description.sub("#{@word.name}","________").sub("#{@word.name.capitalize}","________"); %></h3>
+        <h3><%= @sentences[-1].description.sub("#{@word.name}","________").sub("#{@word.name.capitalize}","________") if @sentences[-1] and @sentences[-1].description %></h3>
       </article>
       <div class="to_be_sort">
         <section class="words_list border_radius">
@@ -24,9 +24,9 @@
 <% else %>
   <div id="face">
     <section class="m_box angled-135 stripes border_radius">
-      <div class="m_bt">在输入框中拼写单词。<span class="count_down">50</span></div>
+      <div class="m_bt">在输入框中拼写单词。<span class="count_down">5</span></div>
       <section class="example_list">
-        <p><%= @sentences[-1].description.sub("#{@word.name}","<input class=\"words_input\" id=\"step4_input\" type=\"text\" />").html_safe %></p>
+        <p><%= @sentences[-1].description.sub("#{@word.name}","<input class=\"words_input\" id=\"step4_input\" type=\"text\" />").html_safe if @sentences[-1] and @sentences[-1].description %></p>
       </section>
       <div class="bs_btn_box"><button class="bs_btn border_radius" onclick="javascript:check_step4_input();">确认</button></div>
     </section>

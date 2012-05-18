@@ -4,7 +4,10 @@ class User < ActiveRecord::Base
   include REXML
   
   has_one :user_word_relation
-  
+  NEW_WORD_STEP = [1, 2, 3, 4]  #新单词的步骤, 共有4步
+  OLD_WORD_TIME = [1, 2, 3, 4]  #复习的单词的轮次，共有4轮
+
+
   REPEAT_STATUS = {"L" => 1 , "L1" => 2, "L2" => 3, "L3" => 4} #复习共四轮
   REPEAT_NUM = {1 => "L" , 2 => "L1", 3 => "L2", 4 => "L3"}
   REPEAT_DAY = {"L" => 1, "L1" => 2, "L2" => 4, "L3" => 8} #每一轮的复习间隔时间分别为：L 1天， L1 2天， L2 4天， L3 8天
@@ -37,7 +40,7 @@ class User < ActiveRecord::Base
       doc = user_word_relation.open_file
       recite_words = doc.get_elements("/user_words/new_words//word")
       recite_words.each do |e|
-        e.add_attribute("step", "0")
+        e.add_attribute("step", "#{NEW_WORD_STEP[0]}")
       end
       all_dates = doc.root.elements["old_words"].elements["all_date"].text if doc.root.elements["old_words"].elements["all_date"]
       leave_dates = []
@@ -49,7 +52,7 @@ class User < ActiveRecord::Base
         word_list = doc.root.elements["old_words"].elements["_#{l_d}"]
         if !word_list.nil? and word_list.elements.size > 0
           word_list.each_element {|w|
-            if w.attributes["step"].to_i == REPEAT_STATUS["L"]
+            if w.attributes["step"].to_i == OLD_WORD_TIME[0]
               doc.root.elements["new_words"].add_element("word",
                 {"id"=>"#{w.attributes["id"]}", "is_error" => "false", "repeat_time" => "0", "step" => "0"})
               doc.delete_element(w.xpath)
