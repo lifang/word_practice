@@ -61,11 +61,16 @@ function answer_mistake(){
 }
 
 //继续
-function goto_next() {
-    if($("#error").val()!="error"){
+function goto_next(flag) {
+    if (flag == "correct") {
+        hide_mask($('#correct'));
         ajax_next_word();
-    }else{
-     rollback();
+        //开始下一步的倒计时
+        //reset_clock(5);
+        //local_save_start("clock");
+    } else {
+        hide_mask($('#mistake'));
+        rollback();        
     }
 }
 
@@ -85,6 +90,7 @@ function study_rollback() {
 
 function click_knowwell(){
     hide_mask($('#knowwell'));
+    ajax_know_well();
 }
 
 function hide_mask(ele){

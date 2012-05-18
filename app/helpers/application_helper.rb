@@ -74,7 +74,7 @@ module ApplicationHelper
       new_word_node = insert_node.add_element("word")
       manage_element(new_word_node, {}, {:id=>word_id,:is_error=>"true",:repeat_time=>"0",:step=>this_step})
     else
-      if word_node.attributes["is_error"]=="true" && word_node.attributes["repeat_time"].to_i<1
+      if word_node.attributes["is_error"]=="true" && word_node.attributes["repeat_time"]=="0"
         insert_node = xml.root.elements["new_words"]
         new_word_node = insert_node.add_element("word")
         manage_element(new_word_node, {}, {:id=>word_id,:is_error=>"true",:repeat_time=>word_node.attributes["repeat_time"].to_i+1,:step=>this_step})
@@ -82,7 +82,7 @@ module ApplicationHelper
         if this_step<4
           insert_node = xml.root.elements["new_words"]
           new_word_node = insert_node.add_element("word")
-          manage_element(new_word_node, {}, {:id=>word_id,:is_error=>"true",:repeat_time=>word_node.attributes["repeat_time"].to_i+1,:step=>this_step+1})
+          manage_element(new_word_node, {}, {:id=>word_id,:is_error=>"false",:repeat_time=>0,:step=>this_step+1})
         else
           insert_node = old_words_node.elements["_#{Constant::REVIEW_STEP[0][0].day.since.to_date}"]
           insert_node = old_words_node.add_element("_#{Constant::REVIEW_STEP[0][0].day.since.to_date}") unless insert_node
