@@ -5,7 +5,7 @@ class WordsController < ApplicationController
   layout "application"
   
   def index
-    cookies[:user_id]=1
+    cookies[:user_id]=2
     cookies[:user_name]="jeffrey6052"
     #---------------------------------------------------硬写 cookies
     @user = User.find(cookies[:user_id])
