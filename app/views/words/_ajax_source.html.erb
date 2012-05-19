@@ -1,0 +1,229 @@
+<% @word=ajax_source[:word]; @web_type=ajax_source[:web_type]; @sentences=ajax_source[:sentences]; @other_words=ajax_source[:other_words] %>
+  <link href="/assets/style.css" rel="stylesheet" type="text/css"/>
+  <script type="text/javascript" src="/assets/jquery-1.7.js"></script>
+  <script type="text/javascript" src="/assets/main.js"></script>
+  <script type="text/javascript" src="/assets/iscroll.js"></script>
+  <script type="text/javascript" src="/assets/word.js"></script>
+  <script type="text/javascript">
+    var myScroll;
+<% if @web_type=="recite" %>
+  var step=1;
+<% else %>
+  var step=4;
+<% end %>
+var correct_sum = 0;
+var word_name = "<%= @word.name.strip %>";
+var word_id = "<%= @word.id %>";
+var web_type = "<%= @web_type %>";
+
+$(function(){
+$(".to_be_sort").reorder();
+});
+
+  </script>
+
+  <header>
+    <div class="top_line"></div>
+    <div class="back border_radius" onclick="javascript:window.location.href='/words'">返回</div>
+    <h1 class="h_title">大学英语四级词汇</h1>
+  </header>
+
+  <section class="main" id="wrapper">
+    <div id="scroller">
+      <% if @web_type == "recite" %>
+
+        <div id="step1">
+          <section class="m_box angled-135 stripes border_radius">
+            <div class="m_bt">看单词选意思。<span class="count_down">50</span></div>
+            <article class="words_audio">
+              <h3><%= @word.name %></h3>
+              <div class="play_audio">Play</div>
+              <audio preload="preload" loop>
+                <source src="<%= "#{Constant::SERVER_PATH}#{@word.enunciate_url}" %>" type="audio/mpeg"/>
+                您的浏览器不支持 audio 标签。
+              </audio>
+            </article>
+            <div class="to_be_sort">
+              <section class="words_list border_radius">
+                <p onclick="javascript:answer_correct(1);"><%= PhoneWord::WORD_TYPE[@word.types] %><span><%= @word.ch_mean %></span></p>
+              </section>
+              <section class="words_list border_radius">
+                <p onclick="javascript:answer_mistake(1);"><%= PhoneWord::WORD_TYPE[@other_words[0].types] %><span><%= @other_words[0].ch_mean %></span></p>
+              </section>
+              <section class="words_list border_radius">
+                <p onclick="javascript:answer_mistake(1);"><%= PhoneWord::WORD_TYPE[@other_words[1].types] %><span><%= @other_words[1].ch_mean %></span></p>
+              </section>
+              <section class="words_list border_radius">
+                <p onclick="javascript:answer_mistake(1);"><%= PhoneWord::WORD_TYPE[@other_words[2].types] %><span><%= @other_words[2].ch_mean %></span></p>
+              </section>
+            </div>
+          </section>
+          <section class="words_btn_box">
+            <div class="rollBack" onclick="javascript:rollback();">翻面学习</div>
+            <div class="knowWell" onclick="javascript:click_knowwell();">已经掌握</div>
+          </section>
+        </div>
+
+        <div id="step2" style="display:none;">
+          <section class="m_box angled-135 stripes border_radius">
+            <div class="m_bt">看意思选单词。<span class="count_down">50</span></div>
+            <article class="words_audio">
+              <h3><%= @word.ch_mean %></h3>
+            </article>
+            <div class="to_be_sort">
+              <section class="words_list border_radius">
+                <p onclick="javascript:answer_correct();"><span><%= @word.name %></span></p>
+              </section>
+              <section class="words_list border_radius">
+                <p onclick="javascript:answer_mistake();"><span><%= @other_words[0].name %></span></p>
+              </section>
+              <section class="words_list border_radius">
+                <p onclick="javascript:answer_mistake();"><span><%= @other_words[1].name %></span></p>
+              </section>
+              <section class="words_list border_radius">
+                <p onclick="javascript:answer_mistake();"><span><%= @other_words[2].name %></span></p>
+              </section>
+            </div>
+          </section>
+          <section class="words_btn_box">
+            <div class="rollBack" onclick="javascript:rollback();">翻面学习</div>
+            <div class="knowWell" onclick="javascript:click_knowwell();">已经掌握</div>
+          </section>
+        </div>
+
+        <div id="step3" style="display:none;">
+          <section class="m_box angled-135 stripes border_radius">
+            <div class="m_bt">听声音，选择你听到的单词。<span class="count_down">50</span></div>
+            <article class="words_audio">
+              <div class="play_audio" style="float:left;">Play</div>
+              <audio preload="preload" loop="">
+                <source src="<%= "#{Constant::SERVER_PATH}#{@word.enunciate_url}" %>" type="audio/mpeg"/>
+                您的浏览器不支持 audio 标签。
+              </audio>
+            </article>
+            <div class="to_be_sort">
+              <section class="words_list border_radius">
+                <p onclick="javascript:answer_correct();"><span><%= @word.name %></span></p>
+              </section>
+              <section class="words_list border_radius">
+                <p onclick="javascript:answer_mistake();"><span><%= @other_words[0].name %></span></p>
+              </section>
+              <section class="words_list border_radius">
+                <p onclick="javascript:answer_mistake();"><span><%= @other_words[1].name %></span></p>
+              </section>
+              <section class="words_list border_radius">
+                <p onclick="javascript:answer_mistake();"><span><%= @other_words[2].name %></span></p>
+              </section>
+            </div>
+          </section>
+          <section class="words_btn_box">
+            <div class="rollBack" onclick="javascript:rollback();">翻面学习</div>
+            <div class="knowWell" onclick="javascript:click_knowwell();">已经掌握</div>
+          </section>
+        </div>
+
+
+      <% end %>
+
+      <% if true %>
+
+        <div id="step4" <% if @web_type=="recite" %> style="display:none;" <% end %> >
+          <section class="m_box angled-135 stripes border_radius">
+            <div class="m_bt">看句子选单词。<span class="count_down">50</span></div>
+            <article class="words_audio">
+              <h3><%= @sentences[-1].description.sub("#{@word.name}","________"); %></h3>
+            </article>
+            <div class="to_be_sort">
+              <section class="words_list border_radius">
+                <p onclick="javascript:answer_correct();"><span><%= @word.name %></span></p>
+              </section>
+              <section class="words_list border_radius">
+                <p onclick="javascript:answer_mistake();"><span><%= @other_words[0].name %></span></p>
+              </section>
+              <section class="words_list border_radius">
+                <p onclick="javascript:answer_mistake();"><span><%= @other_words[1].name %></span></p>
+              </section>
+              <section class="words_list border_radius">
+                <p onclick="javascript:answer_mistake();"><span><%= @other_words[2].name %></span></p>
+              </section>
+            </div>
+          </section>
+          <section class="words_btn_box">
+            <div class="rollBack" onclick="javascript:rollback();">翻面学习</div>
+            <div class="knowWell" onclick="javascript:click_knowwell();">已经掌握</div>
+          </section>
+        </div>
+
+      <% else %>
+
+        <div id="step4" <% if @web_type=="recite" %> style="display:none;" <% end %> >
+          <section class="m_box angled-135 stripes border_radius">
+            <div class="m_bt">在输入框中拼写单词。<span class="count_down">50</span></div>
+            <section class="example_list">
+              <p><%= @sentences[-1].description.sub("#{@word.name}","<input class=\"words_input\" id=\"step4_input\" type=\"text\" />").html_safe %></p>
+            </section>
+            <div class="bs_btn_box"><button class="bs_btn border_radius" onclick="javascript:check_step4_input();">确认</button></div>
+          </section>
+          <section class="words_btn_box">
+            <div class="rollBack" onclick="javascript:rollback();">翻面学习</div>
+            <div class="knowWell" onclick="javascript:click_knowwell();">已经掌握</div>
+          </section>
+        </div>
+
+      <% end %>
+
+      <div id="step5" style="display:none;">
+        <section class="m_box angled-135 stripes border_radius">
+          <article class="words_audio">
+            <h3><%= @word.name %></h3>
+            <div class="words_dy"><%= @word.phonetic %></div>
+            <div class="play_audio float_r">Play</div>
+            <audio preload="preload" loop>
+              <source src="<%= "#{Constant::SERVER_PATH}#{@word.enunciate_url}" %>" type="audio/mpeg"/>
+              您的浏览器不支持 audio 标签。
+            </audio>
+            <div class="clear"></div>
+            <div class="words_cx">
+              <p><%= PhoneWord::WORD_TYPE[@word.types] %><span><%= @word.ch_mean %></span></p>
+            </div>
+          </article>
+
+          <% @sentences.each_with_index do |s,index| %>
+            <% break if index>2 %>
+            <section class="example_list">
+              <p><%= s.description %></p>
+              <p class="gray"><%= s.ch_mean %></p>
+            </section>
+          <% end %>
+        </section>
+        <section class="words_btn_box">
+          <div class="wordNext" onclick="javascript:ajax_next_word();">继续学习</div>
+          <div class="knowWell" onclick="javascript:click_knowwell();">已经掌握</div>
+        </section>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="mask" id="mask" style="display:none;"></div>
+  <article class="t_area" id="correct" style="display:none;">
+    <div class="t_icon"><img src="/assets/true_icon.png" alt="true_icon"/></div>
+    <h1>答对了！</h1>
+    <div class="t_btn border_radius" id="after_four_correct" style="display:none;" onclick="javascript:hide_mask($('#correct'));click_knowwell();"><h2>已经掌握</h2></div>
+    <div class="t_btn border_radius" onclick="javascript:hide_mask($('#correct'));rollback();"><h2>翻面学习</h2></div>
+    <div class="t_btn border_radius" onclick="javascript:hide_mask($('#correct'));next_step();"><h2>继续(<span id="step1_correct_countdown">5</span>)</h2></div>
+  </article>
+  <article class="t_area" id="mistake" style="display:none;">
+    <div class="t_icon"><img src="/assets/false_icon.png" alt="false_icon"/></div>
+    <h1>答错了！</h1>
+    <div class="t_btn border_radius" onclick="javascript:ignore_mistake();hide_mask($('#mistake'));"><h2>按错了，不算</h2></div>
+    <div class="t_btn border_radius" onclick="javascript:hide_mask($('#mistake'));rollback();"><h2>继续(<span id="step1_correct_countdown">5</span>)</h2></div>
+  </article>
+  <article class="t_area" id="knowwell" style="display:none;">
+    <div class="t_icon"><img src="/assets/suo_icon.png" /></div>
+    <h1>确认你已经掌握了吗？</h1>
+    <div class="t_btn border_radius" onclick="javascript:ajax_know_well(<%= @word.id %>);"><h2>确认</h2><p>标记该单词为"已学会",并开始学习下一单词</p></div>
+    <div class="t_btn border_radius" onclick="javascript:hide_mask($('#knowwell'));"><h2>不确认</h2><p>返回继续学习该单词</p></div>
+  </article>
+
+  <input id="error" type="hidden" value=""></input>
