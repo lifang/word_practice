@@ -125,12 +125,13 @@ class WordsController < ApplicationController
   #已经掌握
   def ajax_know_well
     #to be continue
+    type = params[:type]
     word_id = params[:word_id]
     record = UserWordRelation.find_by_user_id(cookies[:user_id])
     x_url = "#{Rails.root}/public/user_word_xml/#{record.practice_url}"
     xml = get_doc(x_url)
-    word_node = xml.root.elements["new_words//word[@id='#{word_id}']"]
-    word_node = xml.root.elements["old_words//word[@id='#{word_id}']"] unless word_node
+    word_node = xml.root.elements["new_words//word[@id='#{word_id}']"] if type == "recite"
+    word_node = xml.root.elements["old_words//word[@id='#{word_id}']"] if type == "review"
     xml.delete_element(word_node.xpath)
     write_xml(xml,x_url)
     recite_ids = record.recite_ids.nil? ? "" : record.recite_ids
