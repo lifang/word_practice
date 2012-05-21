@@ -1,0 +1,22 @@
+<div id="face">
+  <section class="m_box angled-135 stripes border_radius">
+    <div class="m_bt">看词义，选择对应的单词。<span class="count_down">5</span></div>
+    <article class="words_audio">
+      <h3><%= @word.ch_mean %></h3>
+    </article>
+    <div class="to_be_sort">
+      <section class="words_list border_radius">
+        <p onclick="javascript:answer_correct();"><span><%= @word.name %></span></p>
+      </section>
+      <% @other_words.each do |w| %>
+        <section class="words_list border_radius">
+          <p onclick="javascript:answer_mistake();"><span><%= w.name %></span></p>
+        </section>
+      <% end %>
+    </div>
+  </section>
+  <section class="words_btn_box">
+    <div class="rollBack" onclick="javascript:rollback();">翻面学习</div>
+    <div class="knowWell" onclick="javascript:click_knowwell();">已经掌握</div>
+  </section>
+</div>

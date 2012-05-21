@@ -37,42 +37,25 @@ document.addEventListener('DOMContentLoaded', function () {
 }, false);
 
 function rollback(){
-    $("#step"+step).hide();
-    step = 5;    
-    $("#step5").show();
+    $("#face").hide();    
+    $("#back").show();
     $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
     //翻面学习清空倒计时
     reset_clock(5);
 }
 
-function next_step(){
-    if(step==4 && $("#error").val()!="error"){
-        ajax_next_word();
-        return false;
-    }
-    $("#step"+step).hide();
-    step += 1;
-    $("#step"+step).show();
-    $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
-}
-
 function answer_correct(){
-    $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
-    $("#mask").show();
-    $("#correct").show();
-    if(step==4 && $("#error").val()!="error"){
+    show_mask($('#correct'));
+    if((web_type=="recite" && step =="4")||(web_type=="review" && $("#error").val()!="error")){
         $("#after_four_correct").show();
-        $("#correct_next_btn").attr("onclick","javascript:ajax_next_word()");
     }
     reset_clock(3);
     local_save_start("correct");
 }
 
 function answer_mistake(){
-    $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
     $("#error").val("error");
-    $("#mask").show();
-    $("#mistake").show();
+    show_mask($('#mistake'));
 
     reset_clock(3);
     local_save_start("mistake");
@@ -82,20 +65,19 @@ function answer_mistake(){
 function goto_next(flag) {
     if (flag == "correct") {
         hide_mask($('#correct'));
-        next_step();
+        ajax_next_word();
         //开始下一步的倒计时
         reset_clock(5);
-        local_save_start("clock");
+        //local_save_start("clock");
     } else {
         hide_mask($('#mistake'));
         rollback();        
     }
-    
 }
 
 //按错了
 function reset_answer() {
-    ignore_mistake();
+    $("#error").val("ignore");
     hide_mask($('#mistake'));
     reset_clock(5);
     local_save_start("clock");
@@ -107,19 +89,21 @@ function study_rollback() {
     rollback();
 }
 
-function ignore_mistake(){
-    $("#error").val("ignore");
-}
-
 function click_knowwell(){
-    $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
-    $("#mask").show();
-    $("#knowwell").show();
+    hide_mask($('#knowwell'));
+    ajax_know_well();
 }
 
 function hide_mask(ele){
     $(ele).hide();
     $("#mask").hide();
+    $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
+}
+
+function show_mask(ele){
+    $("#mask").show();
+    $(ele).show();
+    $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
 }
 
 function check_step4_input(){

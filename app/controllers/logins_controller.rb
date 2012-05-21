@@ -135,7 +135,6 @@ class LoginsController < ApplicationController
 
   def user_option
     param={:study_role=>params[:words].to_i,:timer=>"#{params[:answer_time]},#{params[:read_time]}"}
-    p param
     UserWordRelation.find_by_user_id( cookies[:user_id]).update_attributes(param)
     redirect_to "/words"
   end

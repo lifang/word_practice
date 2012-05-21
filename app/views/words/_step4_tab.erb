@@ -1,0 +1,38 @@
+<% if cookies[:study_role].nil? || cookies[:study_role]=="0" %>
+  <div id="face">
+    <section class="m_box angled-135 stripes border_radius">
+      <div class="m_bt">看句子选单词。<span class="count_down">5</span></div>
+      <article class="words_audio">
+        <h3><%= @sentences[-1].description.sub("#{@word.name}","________").sub("#{@word.name.capitalize}","________") if @sentences[-1] and @sentences[-1].description %></h3>
+      </article>
+      <div class="to_be_sort">
+        <section class="words_list border_radius">
+          <p onclick="javascript:answer_correct();"><span><%= @word.name %></span></p>
+        </section>
+        <% @other_words.each do |w| %>
+          <section class="words_list border_radius">
+            <p onclick="javascript:answer_mistake();"><span><%= w.name %></span></p>
+          </section>
+        <% end %>
+      </div>
+    </section>
+    <section class="words_btn_box">
+      <div class="rollBack" onclick="javascript:rollback();">翻面学习</div>
+      <div class="knowWell" onclick="javascript:click_knowwell();">已经掌握</div>
+    </section>
+  </div>
+<% else %>
+  <div id="face">
+    <section class="m_box angled-135 stripes border_radius">
+      <div class="m_bt">在输入框中拼写单词。<span class="count_down">5</span></div>
+      <section class="example_list">
+        <p><%= @sentences[-1].description.sub("#{@word.name}","<input class=\"words_input\" id=\"step4_input\" type=\"text\" />").html_safe if @sentences[-1] and @sentences[-1].description %></p>
+      </section>
+      <div class="bs_btn_box"><button class="bs_btn border_radius" onclick="javascript:check_step4_input();">确认</button></div>
+    </section>
+    <section class="words_btn_box">
+      <div class="rollBack" onclick="javascript:rollback();">翻面学习</div>
+      <div class="knowWell" onclick="javascript:click_knowwell();">已经掌握</div>
+    </section>
+  </div>
+<% end %>

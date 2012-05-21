@@ -1,0 +1,29 @@
+<div id="back" style="display:none;">
+  <section class="m_box angled-135 stripes border_radius">
+    <article class="words_audio">
+      <h3><%= @word.name %></h3>
+      <div class="words_dy"><%= @word.phonetic %></div>
+      <div class="play_audio float_r">Play</div>
+      <audio preload="preload" loop>
+        <source src="<%= "#{Constant::SERVER_PATH}#{@word.enunciate_url}" %>" type="audio/mpeg"/>
+        您的浏览器不支持 audio 标签。
+      </audio>
+      <div class="clear"></div>
+      <div class="words_cx">
+        <p><%= PhoneWord::WORD_TYPE[@word.types] %><span><%= @word.ch_mean %></span></p>
+      </div>
+    </article>
+
+    <% @sentences.each_with_index do |s,index| %>
+      <% break if index>2 %>
+      <section class="example_list">
+        <p><%= s.description %></p>
+        <p class="gray"><%= s.ch_mean %></p>
+      </section>
+    <% end %>
+  </section>
+  <section class="words_btn_box">
+    <div class="wordNext" onclick="javascript:ajax_next_word();">继续学习</div>
+    <div class="knowWell" onclick="javascript:click_knowwell();">已经掌握</div>
+  </section>
+</div>

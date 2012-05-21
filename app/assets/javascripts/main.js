@@ -99,5 +99,7 @@ function closeme(){
 }
 
 $(document).ready(function(){
-    local_save_start("clock");
+    if ($(".count_down").length > 0) {
+        local_save_start("clock");
+    }    
 })

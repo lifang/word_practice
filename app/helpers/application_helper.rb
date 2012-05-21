@@ -50,17 +50,15 @@ module ApplicationHelper
     recite_sum = recite_words.length #新学单词总数
     new_words_node = xml.root.elements["new_words"]
     record = UserWordRelation.find_by_user_id(user_id)
-    new_words_node.attributes["update"].nil? ? new_words_node.add_attribute("update", "#{Time.now.to_date}") : new_words_node.attributes["update"] = "#{Time.now.to_date}"
+    #new_words_node.attributes["update"].nil? ? new_words_node.add_attribute("update", "#{Time.now.to_date}") : new_words_node.attributes["update"] = "#{Time.now.to_date}"
     if recite_sum<Constant::NEW_WORDS_SUM && review_sum+recite_sum<Constant::LIMIT_WORDS_SUM
       nw_sum = Constant::NEW_WORDS_SUM - recite_sum
       nomal_ids = record.nomal_ids.split(",")
       new_words = nomal_ids[0,nw_sum]
       record.update_attribute("nomal_ids",nomal_ids[nw_sum..-1].nil? ? "" : nomal_ids[nw_sum..-1].join(","))
       new_words.each do |word_id|
-        word_node = new_words_node.add_element("word")
-        word_node.add_attribute("id","#{word_id}")
-        word_node.add_attribute("is_error","false")
-        word_node.add_attribute("repeat_time","0")
+        new_words_node.add_element("word",
+          {"id"=>"#{word_id}", "is_error" => "false", "repeat_time" => "0", "step" => "0"})
       end
     end
     return xml
@@ -70,20 +68,24 @@ module ApplicationHelper
   def handle_recite_word(xml,word_id,error)
     old_words_node = xml.root.elements["old_words"]
     word_node = xml.root.elements["new_words//word[@id='#{word_id}']"]
+    this_step = word_node.attributes["step"].to_i
     if error == "error"
       insert_node = xml.root.elements["new_words"]
-      new_word_node = insert_node.add_element("word")
-      manage_element(new_word_node, {}, {:id=>word_id,:is_error=>"true",:repeat_time=>"0"})
+      insert_node.add_element("word", {"id" => word_id, "is_error" => "true",
+          "repeat_time" => "0", "step" => this_step})
     else
-      if word_node.attributes["is_error"]=="true" && word_node.attributes["repeat_time"].to_i<1
+      if word_node.attributes["is_error"]=="true" && word_node.attributes["repeat_time"]=="0"
         insert_node = xml.root.elements["new_words"]
-        new_word_node = insert_node.add_element("word")
-        manage_element(new_word_node, {}, {:id=>word_id,:is_error=>"true",:repeat_time=>word_node.attributes["repeat_time"].to_i+1})
+        insert_node.add_element("word", {"id"=>word_id,"is_error"=>"true","repeat_time"=>word_node.attributes["repeat_time"].to_i+1,"step"=>this_step})
       else
-        insert_node = old_words_node.elements["_#{Constant::REVIEW_STEP[0][0].day.since.to_date}"]
-        insert_node = old_words_node.add_element("_#{Constant::REVIEW_STEP[0][0].day.since.to_date}") unless insert_node
-        new_word_node = insert_node.add_element("word")
-        manage_element(new_word_node, {}, {:id=>word_id,:step=>1,:start_at=>Constant::REVIEW_STEP[0][0].day.since.to_date,:end_at=>(Constant::REVIEW_STEP[0][0]+Constant::REVIEW_STEP[0][1]).day.since.to_date,:is_error=>"false",:repeat_time=>"0"})
+        if this_step<4
+          insert_node = xml.root.elements["new_words"]
+          insert_node.add_element("word", {"id"=>word_id,"is_error"=>"false","repeat_time"=>0,"step"=>this_step+1})
+        else
+          insert_node = old_words_node.elements["_#{Constant::REVIEW_STEP[0][0].day.since.to_date}"]
+          insert_node = old_words_node.add_element("_#{Constant::REVIEW_STEP[0][0].day.since.to_date}") unless insert_node
+          insert_node.add_element("word", {"id"=>word_id,"step"=>1,"start_at"=>Constant::REVIEW_STEP[0][0].day.since.to_date,"end_at"=>(Constant::REVIEW_STEP[0][0]+Constant::REVIEW_STEP[0][1]).day.since.to_date,"is_error"=>"false","repeat_time"=>"0"})
+        end
       end
     end
     xml.delete_element(word_node.xpath)
@@ -97,21 +99,24 @@ module ApplicationHelper
     if error == "error"
       insert_node = xml.root.elements["_#{Time.now.to_date}"]
       insert_node = old_words_node.add_element("_#{Time.now.to_date}") unless insert_node
-      new_word_node = insert_node.add_element("word")
-      manage_element(new_word_node, {}, {:id=>word_id,:start_at=>word_node.attributes["start_at"],:end_at=>word_node.attributes["end_at"],:step=>word_node.attributes["step"],:is_error=>"true",:repeat_time=>"0"})
+      insert_node.add_element("word", {"id" => word_id, "start_at" => word_node.attributes["start_at"],
+          "end_at" => word_node.attributes["end_at"],"step" => word_node.attributes["step"],"is_error" => "true","repeat_time" => "0"})
     else
       if word_node.attributes["is_error"]=="true" && word_node.attributes["repeat_time"].to_i<1
         insert_node = old_words_node.elements["_#{Time.now.to_date}"]
         insert_node = old_words_node.add_element("_#{Time.now.to_date}") unless insert_node
-        new_word_node = insert_node.add_element("word")
-        manage_element(new_word_node, {}, {:id=>word_id,:start_at=>word_node.attributes["start_at"],:end_at=>word_node.attributes["end_at"],:step=>word_node.attributes["step"],:is_error=>"true",:repeat_time=>word_node.attributes["repeat_time"].to_i+1})
+        insert_node.add_element("word", {"id" => word_id, "start_at" => word_node.attributes["start_at"],
+            "end_at" => word_node.attributes["end_at"], "step" => word_node.attributes["step"], "is_error" => "true",
+            "repeat_time" => word_node.attributes["repeat_time"].to_i+1})
       else
         this_step = word_node.attributes["step"].to_i
-        if this_step<4
+        if this_step < User::OLD_WORD_TIME[3]
           insert_node = old_words_node.elements["_#{Constant::REVIEW_STEP[this_step][0].day.since.to_date}"]
           insert_node = old_words_node.add_element("_#{Constant::REVIEW_STEP[this_step][0].day.since.to_date}") unless insert_node
-          new_word_node = insert_node.add_element("word")
-          manage_element(new_word_node, {}, {:id=>word_id,:step=>this_step+1,:start_at=>Constant::REVIEW_STEP[this_step][0].day.since.to_date,:end_at=>(Constant::REVIEW_STEP[this_step][0]+Constant::REVIEW_STEP[this_step][1]).day.since.to_date,:is_error=>"false",:repeat_time=>"0"})
+          insert_node.add_element("word", {"id" => word_id, "step" => this_step+1,
+              "start_at" => Constant::REVIEW_STEP[this_step][0].day.since.to_date,
+              "end_at" => (Constant::REVIEW_STEP[this_step][0]+Constant::REVIEW_STEP[this_step][1]).day.since.to_date,
+              "is_error" => "false","repeat_time" => "0"})
         else
           record = UserWordRelation.find_by_user_id(cookies[:user_id])
           recite_ids = record.recite_ids.nil? ? "" : record.recite_ids
@@ -148,10 +153,11 @@ module ApplicationHelper
       end
     end
     word = PhoneWord.find(xml_word.attributes["id"])
+    step = xml_word.attributes["step"]
     sentences = word.word_sentences
     #获取干扰选项
-    other_words = PhoneWord.get_words_by_level(word.level, 3)
-    return {:word=>word,:web_type=>web_type,:sentences=>sentences,:other_words=>other_words}
+    other_words = PhoneWord.get_words_by_level(word.level, 10)
+    return {:word=>word,:web_type=>web_type,:sentences=>sentences,:other_words=>(other_words.sort_by{rand})[0,3],:step=>step}
   end
 
 end
