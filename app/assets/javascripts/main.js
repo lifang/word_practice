@@ -98,6 +98,8 @@ function closeme(){
     window.close();
 }
 
-//$(document).ready(function(){
-//    local_save_start("clock");
-//})
+$(document).ready(function(){
+    if ($(".count_down").length > 0) {
+        local_save_start("clock");
+    }    
+})

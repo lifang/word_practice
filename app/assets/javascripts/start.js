@@ -41,7 +41,7 @@ function rollback(){
     $("#back").show();
     $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
     //翻面学习清空倒计时
-    //reset_clock(5);
+    reset_clock(5);
 }
 
 function answer_correct(){
@@ -49,15 +49,16 @@ function answer_correct(){
     if((web_type=="recite" && step =="4")||(web_type=="review" && $("#error").val()!="error")){
         $("#after_four_correct").show();
     }
-    //reset_clock(3);
-    //local_save_start("correct");
+    reset_clock(3);
+    local_save_start("correct");
 }
 
 function answer_mistake(){
     $("#error").val("error");
     show_mask($('#mistake'));
-    //reset_clock(3);
-    //local_save_start("mistake");
+
+    reset_clock(3);
+    local_save_start("mistake");
 }
 
 //继续
@@ -66,7 +67,7 @@ function goto_next(flag) {
         hide_mask($('#correct'));
         ajax_next_word();
         //开始下一步的倒计时
-        //reset_clock(5);
+        reset_clock(5);
         //local_save_start("clock");
     } else {
         hide_mask($('#mistake'));
@@ -78,8 +79,8 @@ function goto_next(flag) {
 function reset_answer() {
     $("#error").val("ignore");
     hide_mask($('#mistake'));
-    //reset_clock(5);
-    //local_save_start("clock");
+    reset_clock(5);
+    local_save_start("clock");
 }
 
 //翻面学习
