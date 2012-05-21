@@ -6,9 +6,20 @@
   <section class="m_box angled-135 stripes border_radius">
     <%= form_for :option,:url=>"/logins/user_option",:html=>{:id=>"option"} do %>
       <ul class="learn_gz">
-        <li><input name="words" type="radio" value="0" <% if params[:mode]=="0" %> checked <% end %>  onclick="read_or()"   /> 认读</li>
-        <li><input name="words" type="radio" value="1" <% if params[:mode]=="1" %> checked <% end %> onclick="read_or()" /> 认读+拼写</li>
+        <li><input name="words" type="radio" value="0" <% if @user_word.study_role==0||@user_word.study_role.nil? %> checked <% end %> /> 认读</li>
+        <li><input name="words" type="radio" value="1" <% if @user_word.study_role==1 %> checked <% end %> /> 认读+拼写</li>
+        <%timer=@user_word.timer.nil?? nil : @user_word.timer.split(",")%>
+        <li>答题时间<input name="answer_time" id="answer_time" type="text" value="<%= timer.nil?? 15 :timer[0] %>" class="tx_input" onblur="back_value(15,'answer_time')" />秒</li>
+        <li>读题时间<input name="read_time" id="read_time" type="text" value="<%= timer.nil?? 3 :timer[1] %>" class="tx_input"  onblur="back_value(3,'read_time')" />秒</li>
       </ul>
     <% end %>
+    <div class="jz_btn_box"><button class="bs_btn border_radius" onclick="read_or()">确定</button></div>
   </section>
 </section>
+<div class="mask" id="tishi_zz" style="display: none;"></div>
+<article class="t_area" id="jizhong_tab" style="display: none;">
+  <div class="t_icon"><img src="/assets/ld_icon.png"/></div>
+  <h1>请集中精神才有效果！</h1>
+  <div class="t_btn border_radius"><h2 onclick="javascript:$('#tishi_zz,#jizhong_tab').css('display','none'); $(':checked').attr('checked',null);">取消</h2></div>
+  <div class="t_btn border_radius"><h2 onclick="javascript:$('#option').submit();">确定</h2></div>
+</article>

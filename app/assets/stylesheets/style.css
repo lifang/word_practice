@@ -1,6 +1,7 @@
 @charset "utf-8";
 * { padding: 0; margin: 0;}
 body { font-family: Arial, "微软雅黑"; font-size: 18px; color: #333; background: #fbfdf1;}
+ul { list-style: none;}
 
 .fontSize16 { font-size: 16px;}
 .border_radius {
@@ -73,25 +74,26 @@ header {
 .sageGreen_line { background: #b5c0ad;}
 .black_line { background: #4c4c4c;}
 
-.bs_btn_box {width: 160px; height: 45px; float: left;}
-.se_btn { width: 280px; margin: 0 auto; overflow: hidden; padding: 5px;}
+.bs_btn_box { padding: 5px; height: 45px; float: left;}
+.se_btn { width: 240px; margin: 0 auto; overflow: hidden; padding: 5px;}
 .bs_btn {
-    padding: 0 10px;
-    height: 45px;
-    border: none;
-    font-family: "微软雅黑";
-    line-height: 45px;
-    text-align: center;
-    color: #FFF;
-    font-size: 28px;
-    text-shadow: 0px 1px 1px #000;
+	padding: 0 10px;
+	height: 45px;
+	border: none;
+	font-family: "微软雅黑";
+	line-height: 45px;
+	text-align: center;
+	color: #FFF;
+	font-size: 28px;
+	text-shadow: 0px 1px 1px #000;
     background: #96b71c;
     -webkit-box-shadow: 2px 2px 1px rgba(115,123,84,1);
-    -moz-box-shadow: 2px 2px 1px rgba(115,123,84,1);
-    box-shadow: 2px 2px 1px rgba(115,123,84,1);
+	-moz-box-shadow: 2px 2px 1px rgba(115,123,84,1);
+	box-shadow: 2px 2px 1px rgba(115,123,84,1);
 }
+.jz_btn_box { width: 90px; padding: 5px; height: 45px; margin: 0 auto;}
 
-.sz_btn_box { width: 100px; height: 45px; float: left; margin-left: 20px;}
+.sz_btn_box { padding: 5px; height: 45px; float: left;}
 .sz_btn {
     padding: 0 10px;
     height: 45px;
@@ -233,6 +235,17 @@ header {
 .login_renren { background: url(/assets/login_bg.png) no-repeat 3px -190px;}
 
 /*单词模式选择*/
-.learn_gz li { width: 250px; height: 65px; margin: 20px auto; line-height: 65px; font-size: 24px;}
+.learn_gz li { width: 200px; height: 55px; margin: 10px auto; line-height: 55px; font-size: 24px;}
+.tx_input {
+    width: 50px;
+	padding: 0 5px;
+	margin: 0 5px;
+	display: inline-block;
+	text-align: center;
+	height: 24px;
+	line-height: 24px;
+	color: #999;
+	font-size: 20px;
+}
 
 .count_down {float: right;background: url(/assets/time_bg.png) no-repeat left center;padding-left: 20px;}
