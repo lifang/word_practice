@@ -53,6 +53,7 @@ header {
 	-webkit-box-shadow: 3px 3px 1px rgba(222,222,210,1);
 	-moz-box-shadow: 3px 3px 1px rgba(222,222,210,1);
 	box-shadow: 3px 3px 1px rgba(222,222,210,1);
+	overflow: hidden;
 }
 
 
@@ -79,8 +80,8 @@ header {
 .black_line { background: #4c4c4c;}
 
 
-.se_btn { width: 270px; margin: 0 auto; overflow: hidden; padding: 5px;}
-.bs_btn_box { padding: 0 10px; height: 45px; float: left;}
+.se_btn { width: 240px; margin: 0 auto; overflow: hidden; padding: 5px;}
+.bs_btn_box { padding: 0 5px; height: 45px; float: left;}
 .bs_btn {
 	padding: 0 10px;
 	height: 45px;
@@ -97,7 +98,7 @@ header {
 	box-shadow: 2px 2px 1px rgba(115,123,84,1);
 }
 
-.sz_btn_box { padding: 0 10px; height: 45px; float: left; margin-left: 10px;}
+.sz_btn_box { padding: 0 5px; height: 45px; float: left;}
 .sz_btn {
 	padding: 0 10px;
 	height: 45px;
@@ -251,3 +252,4 @@ header {
 	width:100%;
 	padding:0;
 }
+
