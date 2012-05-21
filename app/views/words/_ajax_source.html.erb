@@ -1,4 +1,4 @@
-<% @word=ajax_source[:word]; @web_type=ajax_source[:web_type]; @sentences=ajax_source[:sentences]; @other_words=ajax_source[:other_words] %>
+<% @word=ajax_source[:word]; @web_type=ajax_source[:web_type]; @sentences=ajax_source[:sentences]; @other_words=ajax_source[:other_words];@step=ajax_source[:step] %>
 <link href="/assets/style.css" rel="stylesheet" type="text/css"/>
 <%= javascript_include_tag "application" %>
 <script type="text/javascript" src="/assets/iscroll.js"></script>
@@ -9,16 +9,20 @@
   var word_id = "<%= @word.id %>";
   var web_type = "<%= @web_type %>";
   var myScroll;
-  var step= web_type=="recite" ? 1 : 4;
+  var step = "<%= @step %>";
   var correct_sum = 0;
 </script>
 
 <% if @web_type == "recite" %>
-  <%= render :partial => "/words/step1_tab" %>
-  <%= render :partial => "/words/step2_tab" %>
-  <%= render :partial => "/words/step3_tab" %>
+  <%= render :partial => "/words/step1_tab" if @step=="1" %>
+  <%= render :partial => "/words/step2_tab" if @step=="2" %>
+  <%= render :partial => "/words/step3_tab" if @step=="3" %>
+  <%= render :partial => "/words/step4_tab" if @step=="4" %>
 <% end %>
+
+<% if @web_type == "review" %>
 <%= render :partial => "/words/step4_tab" %>
+<% end %>
 <%= render :partial => "/words/step5_tab" %>
 
 <div class="mask" id="mask" style="display:none;"></div>
