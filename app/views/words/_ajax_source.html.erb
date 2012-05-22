@@ -21,13 +21,14 @@
   var answer_time = <%= @timer.nil? ? 15 : @timer.split(",")[0].to_i %>;
   var last_time = <%= @timer.nil? ? 3 : @timer.split(",")[1].to_i %>;
   var time_flag = 1;
+  var answer_mark = false; //记录题目是否做对
 </script>
 
 <% if @web_type == "recite" %>
-  <%= render :partial => "/words/step3_tab" if @step=="1" %>
-  <%= render :partial => "/words/step3_tab" if @step=="2" %>
+  <%= render :partial => "/words/step1_tab" if @step=="1" %>
+  <%= render :partial => "/words/step2_tab" if @step=="2" %>
   <%= render :partial => "/words/step3_tab" if @step=="3" %>
-  <%= render :partial => "/words/step3_tab" if @step=="4" %>
+  <%= render :partial => "/words/step4_tab" if @step=="4" %>
 <% end %>
 
 <% if @web_type == "review" %>
@@ -39,7 +40,7 @@
 <article class="t_area" id="correct" style="display:none;">
   <div class="t_icon"><img src="/assets/true_icon.png" alt="true_icon"/></div>
   <h1>答对了！</h1>
-  <div class="t_btn border_radius" id="after_four_correct" style="display:none;" onclick="javascript:hide_mask($('#correct'));show_mask($('#knowwell'));"><h2>已经掌握</h2></div>
+  <div class="t_btn border_radius" id="after_four_correct" style="display:none;" onclick="javascript:click_knowwell();"><h2>已经掌握</h2></div>
   <div class="t_btn border_radius" onclick="javascript:study_rollback();"><h2>翻面学习</h2></div>
   <div class="t_btn border_radius" id="correct_next_btn" onclick="javascript:goto_next('correct');"><h2>继续(<span id="countdown_correct"><%= @timer.split(",")[1] %></span>)</h2></div>
 </article>
@@ -53,7 +54,7 @@
   <div class="t_icon"><img src="/assets/suo_icon.png" /></div>
   <h1>确认你已经掌握了吗？</h1>
   <div class="t_btn border_radius" onclick="javascript:ajax_know_well();"><h2>确认</h2><p>标记该单词为"已学会",并开始学习下一单词</p></div>
-  <div class="t_btn border_radius" onclick="javascript:hide_mask($('#knowwell'));show_mask($('#correct'));"><h2>不确认</h2><p>返回继续学习该单词</p></div>
+  <div class="t_btn border_radius" onclick="javascript:not_sure();"><h2>不确认</h2><p>返回继续学习该单词</p></div>
 </article>
 <% if @step == "3" %>
   <div class="mask" id="tishi_tt" style="display: none;"></div>

@@ -58,7 +58,7 @@ module ApplicationHelper
       record.update_attribute("nomal_ids",nomal_ids[nw_sum..-1].nil? ? "" : nomal_ids[nw_sum..-1].join(","))
       new_words.each do |word_id|
         new_words_node.add_element("word",
-          {"id"=>"#{word_id}", "is_error" => "false", "repeat_time" => "0", "step" => "0"})
+          {"id"=>"#{word_id}", "is_error" => "false", "repeat_time" => "0", "step" => "1"})
       end
     end
     return xml
