@@ -22,14 +22,16 @@ class User < ActiveRecord::Base
 
   #如果用户是第一次登录，则新建用户的背词列表
   def init_word_list(category_id)
-    if self.user_word_relation.nil?
+    user_word=self.user_word_relation
+    if user_word.nil?
       phone_words = PhoneWord.find_by_sql("select id from phone_words order by level, rand()")
       word_ids = []
       word_ids = phone_words.collect { |item| item.id }
       practice_url = self.write_file(self.xml_content, Time.now.strftime("%Y_%m_%d"), "xml", "user_word_xml")
-      UserWordRelation.create(:user_id => self.id, :nomal_ids => word_ids.join(","), :category_id => category_id,
+      user_word=UserWordRelation.create(:user_id => self.id, :nomal_ids => word_ids.join(","), :category_id => category_id,
         :login_time => Time.now.to_datetime, :practice_url => practice_url)
     end
+    return user_word
   end
 
   #根据用户更新用户当天要复习的单词
