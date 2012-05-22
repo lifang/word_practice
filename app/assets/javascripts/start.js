@@ -134,10 +134,8 @@ function ajax_know_well(){
 
 //三连击，新词连续3次答正确，显示提示
 function tree_times_true(is_error) {
-    alert("work");
     if (is_error == "false") {
         if ($("#treetrue").length > 0) {
-            alert("222")
             $("#tishi_tt").show();
             $("#treetrue").show();
             reset_clock(answer_time);
