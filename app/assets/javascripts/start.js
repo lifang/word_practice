@@ -73,6 +73,7 @@ function goto_next(flag) {
         hide_mask($('#mistake'));
         rollback();        
     } else if (flag == "treetrue") {
+        $("#tishi_tt").hide();
         hide_mask($('#treetrue'));
         ajax_next_word();
     }
