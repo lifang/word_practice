@@ -212,7 +212,7 @@ header {
 .login_renren { background: url(/assets/login_bg.png) no-repeat 3px -190px;}
 
 /*学习规则----------------*/
-.learn_gz li { width: 250px; height: 65px; margin: 20px auto; line-height: 65px; font-size: 24px;}
+.learn_gz li { width: 200px; height: 55px; margin: 10px auto; line-height: 55px; font-size: 24px;}
 .tx_input {
     width: 50px;
 	padding: 0 5px;
@@ -225,11 +225,18 @@ header {
 	font-size: 20px;
 }
 
-.drag_box {}
-.drag_box span { display: inline-block; padding: 0 5px; margin: 0 5px; border: 1px #CCCCCC solid; background: #e2e6d7; cursor: move;}
-.drag_box div {min-width: 50px; height: 30px; display: inline-block; padding: 0 5px; margin: 0 5px; border: 1px #CCCCCC solid; background: #FFF;}
-
-
+.drag_box { overflow: hidden;}
+.drag_box span {float: left; padding: 0 5px; margin: 0 10px; border: 1px #CCCCCC solid; background: #e2e6d7; cursor: move;}
+.drag_box div {
+	min-width: 50px;
+	height: 30px;
+	float: left;
+	padding: 0 5px;
+	margin: 0 10px;
+	border: 1px #CCCCCC solid;
+	background: #FFF;
+}
+.drag_box div.sign { border: none; min-width:10px; background: none;}
 
 /*斜纹角度--------*/
 .stripes {
@@ -270,24 +277,3 @@ header {
 	padding:0;
 }
 
-/*login----------------*/
-.login li { width: 250px; height: 65px; margin: 20px auto; overflow: hidden; text-indent: -999px;}
-.login_qq { background: url(/assets/login_bg.png) no-repeat 3px 3px;}
-.login_sina { background: url(/assets/login_bg.png) no-repeat 3px -94px;}
-.login_renren { background: url(/assets/login_bg.png) no-repeat 3px -190px;}
-
-/*单词模式选择*/
-.learn_gz li { width: 200px; height: 55px; margin: 10px auto; line-height: 55px; font-size: 24px;}
-.tx_input {
-    width: 50px;
-	padding: 0 5px;
-	margin: 0 5px;
-	display: inline-block;
-	text-align: center;
-	height: 24px;
-	line-height: 24px;
-	color: #999;
-	font-size: 20px;
-}
-
-.count_down {float: right;background: url(/assets/time_bg.png) no-repeat left center;padding-left: 20px;}
