@@ -56,13 +56,13 @@ class WordsController < ApplicationController
     x_url = "#{Rails.root}/public/#{record.practice_url}"
     xml = get_doc(x_url)
     if type=="recite"   #处理新背的单词
-      this_step = xml.root.elements["new_words//word[@id='#{word_id}']"].attributes["step"].to_i
-      record.update_study_times(this_step == 4 ? study_time * 2 : study_time)
       xml = handle_recite_word(xml,word_id,error)
     elsif type=="review"   #处理复习的单词
       xml = handle_review_word(xml,word_id,error)
-      record.update_study_times(study_time * 2)
     end
+    puts "========================================"
+    puts study_time * params[:time_flag].to_i
+    record.update_study_times(study_time * params[:time_flag].to_i)
     write_xml(xml,x_url)
     source = word_source(xml)
     source.merge!({:timer => record.timer})
@@ -79,10 +79,17 @@ class WordsController < ApplicationController
     type = params[:type]
     word_id = params[:word_id]
     record = UserWordRelation.find_by_user_id(cookies[:user_id])
+    study_time = record.timer.nil? ? ((User::DEFAULT_TIMER).split(",")).to_i : (record.timer.split(",")[0]).to_i
     x_url = "#{Rails.root}/public/#{record.practice_url}"
     xml = get_doc(x_url)
-    word_node = xml.root.elements["new_words//word[@id='#{word_id}']"] if type == "recite"
-    word_node = xml.root.elements["old_words//word[@id='#{word_id}']"] if type == "review"
+    if type == "recite"
+      word_node = xml.root.elements["new_words//word[@id='#{word_id}']"]
+    elsif type == "review"
+      word_node = xml.root.elements["old_words//word[@id='#{word_id}']"]
+    end
+    puts "----------------------------------------------------"
+    puts study_time * params[:time_flag].to_i
+    record.update_study_times(study_time * params[:time_flag].to_i)
     xml.delete_element(word_node.xpath)
     write_xml(xml,x_url)
     recite_ids = record.recite_ids.nil? ? "" : record.recite_ids

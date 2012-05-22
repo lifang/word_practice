@@ -36,6 +36,7 @@
     </section>
   </div>
   <script type="text/javascript">
-        var answer_time = <%= @timer.nil? ? 15 : (@timer.split(",")[0].to_i)*2 %>;
+        answer_time = <%= @timer.nil? ? 15 : (@timer.split(",")[0].to_i)*2 %>;
+        time_flag = 2;
   </script>
 <% end %>

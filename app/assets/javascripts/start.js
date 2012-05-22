@@ -69,9 +69,12 @@ function goto_next(flag) {
         //开始下一步的倒计时
         reset_clock(answer_time);
         //local_save_start("clock");
-    } else {
+    } else if (flag == "mistake") {
         hide_mask($('#mistake'));
         rollback();        
+    } else if (flag == "treetrue") {
+        hide_mask($('#treetrue'));
+        ajax_next_word();
     }
 }
 
@@ -118,13 +121,24 @@ function check_step4_input(){
 function ajax_next_word(){
     $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
     var error = $("#error").val();
-    $('#ajax_loading').load("/words/ajax_next_word?word_id="+word_id+"&type="+web_type+"&error="+error);
+    $('#ajax_loading').load("/words/ajax_next_word?word_id="+word_id+"&type="+web_type+"&error="+error+"&time_flag="+time_flag);
 }
 
 //已经掌握
 function ajax_know_well(){
     $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
-    $('#ajax_loading').load("/words/ajax_know_well?word_id="+word_id+"&type="+web_type);
+    $('#ajax_loading').load("/words/ajax_know_well?word_id="+word_id+"&type="+web_type+"&time_flag="+time_flag);
 }
 
-
+//三连击，新词连续3次答正确，显示提示
+function tree_times_true(is_error) {
+    if (is_error == "false") {
+        if ($("#treetrue").length > 0) {
+            $("#tishi_tt").show();
+            $("#treetrue").show();
+            reset_clock(answer_time);
+        }
+    } else {
+        answer_correct();
+    }
+}
