@@ -52,7 +52,7 @@ class User < ActiveRecord::Base
           word_list.each_element {|w|
             if w.attributes["step"].to_i == OLD_WORD_TIME[0]
               doc.root.elements["new_words"].add_element("word",
-                {"id"=>"#{w.attributes["id"]}", "is_error" => "false", "repeat_time" => "0", "step" => "0"})
+                {"id"=>"#{w.attributes["id"]}", "is_error" => "false", "repeat_time" => "0", "step" => "#{NEW_WORD_STEP[0]}"})
               doc.delete_element(w.xpath)
             else
               if w.attributes["end_at"].to_date < Time.now.to_date

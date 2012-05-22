@@ -58,7 +58,7 @@ module ApplicationHelper
       record.update_attribute("nomal_ids",nomal_ids[nw_sum..-1].nil? ? "" : nomal_ids[nw_sum..-1].join(","))
       new_words.each do |word_id|
         new_words_node.add_element("word",
-          {"id"=>"#{word_id}", "is_error" => "false", "repeat_time" => "0", "step" => "0"})
+          {"id"=>"#{word_id}", "is_error" => "false", "repeat_time" => "0", "step" => "#{User::OLD_WORD_TIME[0]}"})
       end
     end
     return xml
@@ -76,7 +76,8 @@ module ApplicationHelper
     else
       if word_node.attributes["is_error"]=="true" && word_node.attributes["repeat_time"]=="0"
         insert_node = xml.root.elements["new_words"]
-        insert_node.add_element("word", {"id"=>word_id,"is_error"=>"true","repeat_time"=>word_node.attributes["repeat_time"].to_i+1,"step"=>this_step})
+        insert_node.add_element("word", {"id"=>word_id,"is_error"=>"true",
+            "repeat_time"=>word_node.attributes["repeat_time"].to_i+1,"step"=>this_step})
       else
         if this_step<4
           insert_node = xml.root.elements["new_words"]
@@ -84,7 +85,10 @@ module ApplicationHelper
         else
           insert_node = old_words_node.elements["_#{Constant::REVIEW_STEP[0][0].day.since.to_date}"]
           insert_node = old_words_node.add_element("_#{Constant::REVIEW_STEP[0][0].day.since.to_date}") unless insert_node
-          insert_node.add_element("word", {"id"=>word_id,"step"=>1,"start_at"=>Constant::REVIEW_STEP[0][0].day.since.to_date,"end_at"=>(Constant::REVIEW_STEP[0][0]+Constant::REVIEW_STEP[0][1]).day.since.to_date,"is_error"=>"false","repeat_time"=>"0"})
+          insert_node.add_element("word", {"id"=>word_id,"step"=>"#{User::OLD_WORD_TIME[0]}",
+              "start_at"=>Constant::REVIEW_STEP[0][0].day.since.to_date,
+              "end_at"=>(Constant::REVIEW_STEP[0][0]+Constant::REVIEW_STEP[0][1]).day.since.to_date,
+              "is_error"=>"false","repeat_time"=>"0"})
         end
       end
     end
