@@ -4,7 +4,7 @@
     <article class="words_audio">
       <div class="play_audio" style="float:left;" onclick="javascript:$('audio')[0].play();">Play</div>
       <audio preload="preload"  controls="controls" style="display:none">
-        <source src="<%= "#{Constant::SERVER_PATH}#{@word.enunciate_url}" %>" type="audio/mpeg"/>
+        <source src="<%= "#{Constant::BACK_SERVER_PATH}#{@word.enunciate_url}" %>" type="audio/mpeg"/>
         您的浏览器不支持 audio 标签。
       </audio>
     </article>
