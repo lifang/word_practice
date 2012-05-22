@@ -1,11 +1,12 @@
 <header>
   <div class="top_line"></div>
+  <div class="back border_radius" onclick="javascipt:window.location.href='/words';" >返回</div>
   <h1 class="h_title">大学英语四级词汇</h1>
 </header>
 <section class="main" id="wrapper">
   <div id="scroller">
     <div id="ajax_loading">
-      <%= render :partial=>"/words/ajax_source",:object=>@source %>
+      <%= render :partial=>"/words/ajax_source",:object=>@source %>            
     </div>
   </div>
 </section>

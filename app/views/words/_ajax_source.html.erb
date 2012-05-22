@@ -1,4 +1,10 @@
-<% @word=ajax_source[:word]; @web_type=ajax_source[:web_type]; @sentences=ajax_source[:sentences]; @other_words=ajax_source[:other_words];@step=ajax_source[:step] %>
+<% @word=ajax_source[:word]
+  @web_type=ajax_source[:web_type]
+  @sentences=ajax_source[:sentences]
+  @other_words=ajax_source[:other_words]
+  @step=ajax_source[:step]
+  @timer = ajax_source[:timer]
+%>
 <link href="/assets/style.css" rel="stylesheet" type="text/css"/>
 <%= javascript_include_tag "application" %>
 <script type="text/javascript" src="/assets/iscroll.js"></script>
@@ -11,6 +17,8 @@
   var myScroll;
   var step = "<%= @step %>";
   var correct_sum = 0;
+  var answer_time = <%= @timer.nil? ? 15 : @timer.split(",")[0].to_i %>;
+  var last_time = <%= @timer.nil? ? 3 : @timer.split(",")[1].to_i %>;
 </script>
 
 <% if @web_type == "recite" %>
@@ -21,7 +29,7 @@
 <% end %>
 
 <% if @web_type == "review" %>
-<%= render :partial => "/words/step4_tab" %>
+  <%= render :partial => "/words/step4_tab" %>
 <% end %>
 <%= render :partial => "/words/step5_tab" %>
 
@@ -31,13 +39,13 @@
   <h1>答对了！</h1>
   <div class="t_btn border_radius" id="after_four_correct" style="display:none;" onclick="javascript:hide_mask($('#correct'));click_knowwell();"><h2>已经掌握</h2></div>
   <div class="t_btn border_radius" onclick="javascript:study_rollback();"><h2>翻面学习</h2></div>
-  <div class="t_btn border_radius" id="correct_next_btn" onclick="javascript:goto_next('correct');"><h2>继续(<span id="countdown_correct">3</span>)</h2></div>
+  <div class="t_btn border_radius" id="correct_next_btn" onclick="javascript:goto_next('correct');"><h2>继续(<span id="countdown_correct"><%= @timer.split(",")[1] %></span>)</h2></div>
 </article>
 <article class="t_area" id="mistake" style="display:none;">
   <div class="t_icon"><img src="/assets/false_icon.png" alt="false_icon"/></div>
   <h1>答错了！</h1>
   <div class="t_btn border_radius" onclick="javascript:reset_answer();"><h2>按错了，不算</h2></div>
-  <div class="t_btn border_radius" onclick="javascript:goto_next('mistake');"><h2>继续(<span id="countdown_mistake">3</span>)</h2></div>
+  <div class="t_btn border_radius" onclick="javascript:goto_next('mistake');"><h2>继续(<span id="countdown_mistake"><%= @timer.split(",")[1] %></span>)</h2></div>
 </article>
 <article class="t_area" id="knowwell" style="display:none;">
   <div class="t_icon"><img src="/assets/suo_icon.png" /></div>
@@ -48,7 +56,7 @@
 <input id="error" type="hidden" value=""></input>
 
 <script type="text/javascript">
-    $(".to_be_sort").reorder();
+  $(".to_be_sort").reorder();
 </script>
 
 <%= render :partial => "/words/tishi_tab" %>

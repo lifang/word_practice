@@ -1,6 +1,6 @@
 <div id="face">
   <section class="m_box angled-135 stripes border_radius">
-    <div class="m_bt">听声音，选择你听到的单词。<span class="count_down">5</span></div>
+    <div class="m_bt">听声音，选择你听到的单词。<span class="count_down"><%= @timer.split(",")[0] %></span></div>
     <article class="words_audio">
       <div class="play_audio" style="float:left;">Play</div>
       <audio preload="preload" loop="">

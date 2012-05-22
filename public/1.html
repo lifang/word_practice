@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <script type="text/javascript" src="/assets/jquery-1.7.js"></script>
+        <script type="text/javascript" src="/assets/iscroll.js"></script>
+        <title>HTML5 javascript 简单拖拽代码示例</title>
+        <script language="javascript">
+            document.addEventListener('touchstart', function (e) {reset_event(e); }, false);
+            document.addEventListener('touchmove', function (e) {reset_event(e); }, false);
+            document.addEventListener('touchend', function (e) {reset_event(e); }, false);
+            var x1, y1=0;
+            /*
+             * 作者：BitPart
+             * 文档：http://www.htmlv.cn/bbs/topic48.html
+             * 网址：www.htmlv.cn
+             */
+            function reset_event(ev) {
+                if(ev) ev.preventDefault();
+                else window.event.returnValue = false;
+            }
+            function DraggAble(obj){
+                alert(obj.draggable);
+                obj.draggable = true;
+                this.drag_start = function(e) {
+                   // this.startPoint = this.getMousePoint;
+                    this.start;
+                    
+                    //e.dataTransfer.effectAllowed='move';
+                    //e.dataTransfer.dropEffect='move';
+                    //e.dataTransfer.setData("Text", e.target.getAttribute('id'));
+                    //e.dataTransfer.setDragImage(e.target,0,0);
+                    return true;
+                }
+                this.drag_move = function(e) {
+                    alert(3);
+                    var evt = e.touches.item(0);
+
+                    this.style.left=evt.pageX + 5+'px';
+                    this.style.top=evt.pageY + 5 +'px';
+                    this.move;  
+                }
+                this.drag_end = function(e) {
+                    alert(4);
+                    this.end;
+                }
+                obj.ontouchstart = this.drag_start;
+                obj.ontouchmove = this.drag_move;
+                obj.ontouchend = this.drag_end;
+                obj.ondragstart = this.drag_start;
+
+            }
+            function DropAble(obj){
+                obj.draggable = true;
+                this.drag_drop = function(e){
+                    e.target.appendChild(document.getElementById(e.dataTransfer.getData('Text')));
+                    e.stopPropagation();
+                    e.preventDefault();
+                    return false;
+                }
+                this.drag_over = function(e){
+                    e.stopPropagation();
+                    e.preventDefault();
+                    return false;
+                }
+                obj.ondrop =  this.drag_drop;
+                obj.ondragover = this.drag_over;
+            }
+        </script>
+    </head>
+    <body>
+        <div style="width:100px; height:100px; background-color:#09F;" id="obj" >
+            可以把我拖拽到不同的区域哦！
+        </div>
+        <div style="width:200px; height:200px; background-color:#CCC; float:left" id="box1">
+            区域1
+        </div>
+        <div style="width:200px; height:200px; background-color:#F00; float:left" id="box2">
+            区域2
+        </div>
+        <div style="width:200px; height:200px; background-color:#666; float:left" id="box3">
+            区域3
+        </div>
+        <script language="javascript">
+    
+            DraggAble(document.getElementById("obj"));
+            //DropAble(document.getElementById("box1"));
+            //DropAble(document.getElementById("box2"));
+            //DropAble(document.getElementById("box3"));
+        </script>
+    </body>
+</html>
