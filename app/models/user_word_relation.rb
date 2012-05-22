@@ -25,7 +25,7 @@ class UserWordRelation < ActiveRecord::Base
 
   #更新用户的学习时间
   def update_study_times(num)
-    self.update_attributes(:all_study_time => self.all_study_time + num)
+    self.update_attributes(:all_study_time => self.all_study_time.nil? ? num : (self.all_study_time + num))
   end
 
 end

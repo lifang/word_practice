@@ -13,11 +13,7 @@ class User < ActiveRecord::Base
   REPEAT_DAY = {"L" => 1, "L1" => 2, "L2" => 4, "L3" => 8} #每一轮的复习间隔时间分别为：L 1天， L1 2天， L2 4天， L3 8天
   REPEAT_LAST_DAY = {"L" => 0, "L1" => 1, "L2" => 2, "L3" => 4} #每一轮的复习可以推迟的时间分别为：L 0天， L1 1天， L2 2天， L3 4天
 
-
-  FROM = {"sina" => "新浪微博", "renren" => "人人网", "qq" => "腾讯网", "kaixin" => "开心网", "baidu" => "百度"}
-  TIME_SORT = {:ASC => 0, :DESC => 1}   #用户列表按创建时间正序倒序排列
-  U_FROM = {:WEB => 0, :APP => 1} #注册用户来源，0 网站   1 应用
-  USER_FROM = {0 => "网站" , 1 => "应用"}
+  DEFAULT_TIMER = "15, 3"  #默认的答题时间和继续的时间
 
 
   #如果用户是第一次登录，则新建用户的背词列表
@@ -28,8 +24,8 @@ class User < ActiveRecord::Base
       word_ids = []
       word_ids = phone_words.collect { |item| item.id }
       practice_url = self.write_file(self.xml_content, Time.now.strftime("%Y_%m_%d"), "xml", "user_word_xml")
-      user_word=UserWordRelation.create(:user_id => self.id, :nomal_ids => word_ids.join(","), :category_id => category_id,
-        :login_time => Time.now.to_datetime, :practice_url => practice_url)
+      user_word = UserWordRelation.create(:user_id => self.id, :nomal_ids => word_ids.join(","), :category_id => category_id,
+        :login_time => Time.now.to_datetime, :practice_url => practice_url, :timer => DEFAULT_TIMER)
     end
     return user_word
   end

@@ -17,13 +17,15 @@ $(document).ready(function(){
 */
 
 //5秒钟定时器
-var local_start_time = 5;
+var local_start_time = null;
 var local_timer = null;
 var local_save_time = null;
 function local_save_start(flag) {
-    local_save_time = new Date();
+    local_save_time = new Date();    
     if (flag == "clock") {
+        //alert(local_start_time);
         if (parseInt(local_start_time) == parseFloat(local_start_time)) {
+            //alert("true");
             $(".count_down").html(local_start_time);
         }
     } else {
@@ -87,7 +89,7 @@ function reset_clock(num) {
 function restart_clock() {
     $("#tishi_zz").hide();
     $("#jizhong_tab").hide();
-    reset_clock(5);
+    reset_clock(answer_time);
     local_save_start("clock");
 }
 
@@ -98,8 +100,10 @@ function closeme(){
     window.close();
 }
 
+//定义两个全局变量用来记录答题定时的时间，和继续的定时时间
 $(document).ready(function(){
     if ($(".count_down").length > 0) {
+        local_start_time = answer_time;
         local_save_start("clock");
     }    
 })

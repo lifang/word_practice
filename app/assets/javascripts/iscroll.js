@@ -99,11 +99,11 @@ var m = Math,
 			onRefresh: null,
 			onBeforeScrollStart: function (e) { var nodeType = e.explicitOriginalTarget ? e.explicitOriginalTarget.nodeName.toLowerCase() : (e.target ? e.target.nodeName.toLowerCase() : '');
 
-　　if(nodeType != 'select' && nodeType != 'option' && nodeType != 'input' && nodeType != 'textarea'){
+                        if(nodeType != 'select' && nodeType != 'option' && nodeType != 'input' && nodeType != 'textarea'){
 
-　　 　　e.preventDefault();
+                             e.preventDefault();
 
-　　} },
+                        } },
 			onScrollStart: null,
 			onBeforeScrollMove: null,
 			onScrollMove: null,

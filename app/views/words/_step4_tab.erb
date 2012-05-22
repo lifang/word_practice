@@ -1,7 +1,7 @@
 <% if cookies[:study_role].nil? || cookies[:study_role]=="0" %>
   <div id="face">
     <section class="m_box angled-135 stripes border_radius">
-      <div class="m_bt">看句子选单词。<span class="count_down">5</span></div>
+      <div class="m_bt">看句子选单词。<span class="count_down"><%= @timer.split(",")[0] %></span></div>
       <article class="words_audio">
         <h3><%= @sentences[-1].description.sub("#{@word.name}","________").sub("#{@word.name.capitalize}","________") if @sentences[-1] and @sentences[-1].description %></h3>
       </article>
@@ -35,4 +35,7 @@
       <div class="knowWell" onclick="javascript:click_knowwell();">已经掌握</div>
     </section>
   </div>
+  <script type="text/javascript">
+        var answer_time = <%= @timer.nil? ? 15 : (@timer.split(",")[0].to_i)*2 %>;
+  </script>
 <% end %>
