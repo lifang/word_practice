@@ -1,6 +1,8 @@
 # encoding: utf-8
 module Constant
-  SERVER_PATH = "http://localhost:3000"
+  SERVER_PATH = "http://pass.gankao.co"
+
+  BACK_SERVER_PATH = "http://admin.gankao.co"
   
   #项目文件目录
   PUBLIC_PATH = "#{Rails.root}/public"
