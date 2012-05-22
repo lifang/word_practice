@@ -89,6 +89,7 @@ class WordsController < ApplicationController
     recite_ids = (recite_ids.split(",")<<word_id).join(",")
     record.update_attribute("recite_ids",recite_ids)
     source = word_source(xml)
+    source.merge!({:timer => record.timer})
     if source
       render :partial=>"/words/ajax_source",:object=>source
     else
