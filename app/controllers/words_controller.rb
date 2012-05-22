@@ -60,8 +60,6 @@ class WordsController < ApplicationController
     elsif type=="review"   #处理复习的单词
       xml = handle_review_word(xml,word_id,error)
     end
-    puts "========================================"
-    puts study_time * params[:time_flag].to_i
     record.update_study_times(study_time * params[:time_flag].to_i)
     write_xml(xml,x_url)
     source = word_source(xml)
@@ -87,8 +85,6 @@ class WordsController < ApplicationController
     elsif type == "review"
       word_node = xml.root.elements["old_words//word[@id='#{word_id}']"]
     end
-    puts "----------------------------------------------------"
-    puts study_time * params[:time_flag].to_i
     record.update_study_times(study_time * params[:time_flag].to_i)
     xml.delete_element(word_node.xpath)
     write_xml(xml,x_url)

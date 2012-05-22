@@ -1,10 +1,10 @@
 <% @word=ajax_source[:word]
-  @web_type=ajax_source[:web_type]
-  @sentences=ajax_source[:sentences]
-  @other_words=ajax_source[:other_words]
-  @step=ajax_source[:step]
-  @timer = ajax_source[:timer]
-  @is_error = ajax_source[:is_error]
+@web_type=ajax_source[:web_type]
+@sentences=ajax_source[:sentences]
+@other_words=ajax_source[:other_words]
+@step=ajax_source[:step]
+@timer = ajax_source[:timer]
+@is_error = ajax_source[:is_error]
 %>
 <link href="/assets/style.css" rel="stylesheet" type="text/css"/>
 <%= javascript_include_tag "application" %>
@@ -56,13 +56,13 @@
   <div class="t_btn border_radius" onclick="javascript:hide_mask($('#knowwell'));"><h2>不确认</h2><p>返回继续学习该单词</p></div>
 </article>
 <% if @step == "3" %>
-<div class="mask" id="tishi_tt" style="display: none;"></div>
-<article class="t_area" id="treetrue" style="display:none;">
-  <div class="t_icon"><img src="/assets/suo_icon.png" /></div>
-  <h1>您是否已经认识这个单词？</h1>
-  <div class="t_btn border_radius" onclick="javascript:ajax_know_well();"><h2>是</h2><p>标记该单词为"是",并开始学习下一单词</p></div>
-  <div class="t_btn border_radius" onclick="javascript:goto_next($('#treetrue'));"><h2>不是</h2><p>返回继续学习该单词</p></div>
-</article>
+  <div class="mask" id="tishi_tt" style="display: none;"></div>
+  <article class="t_area" id="treetrue" style="display:none;">
+    <div class="t_icon"><img src="/assets/suo_icon.png" /></div>
+    <h1>您是否已经认识这个单词？</h1>
+    <div class="t_btn border_radius" onclick="javascript:ajax_know_well();"><h2>是</h2><p>标记该单词为"是",并开始学习下一单词</p></div>
+    <div class="t_btn border_radius" onclick="javascript:goto_next('treetrue');"><h2>不是</h2><p>返回继续学习该单词</p></div>
+  </article>
 <% end %>
 <input id="error" type="hidden" value=""></input>
 

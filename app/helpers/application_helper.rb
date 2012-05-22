@@ -162,4 +162,20 @@ module ApplicationHelper
       :other_words => (other_words.sort_by{rand})[0,3], :step => step, :is_error => is_error}
   end
 
+  #整理需要替换的单词
+  def leving_word(sentence, word)
+    lev_word = case
+    when sentence =~/#{word}/
+      word
+    when sentence =~/#{word.capitalize}/
+      word
+    when sentence =~/#{word[0, word.length-1]}/
+      word[0, word.length-1]
+    when sentence =~/#{word[0, word.length-2]}/
+      word[0, word.length-2]
+    else word
+    end
+    return lev_word
+  end
+
 end
