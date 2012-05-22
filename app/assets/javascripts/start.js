@@ -45,6 +45,7 @@ function rollback(){
 }
 
 function answer_correct(){
+    answer_mark = true;
     show_mask($('#correct'));
     if((web_type=="recite" && step =="4")||(web_type=="review" && $("#error").val()!="error")){
         $("#after_four_correct").show();
@@ -56,7 +57,6 @@ function answer_correct(){
 function answer_mistake(){
     $("#error").val("error");
     show_mask($('#mistake'));
-
     reset_clock(last_time);
     local_save_start("mistake");
 }
@@ -68,7 +68,7 @@ function goto_next(flag) {
         ajax_next_word();
         //开始下一步的倒计时
         reset_clock(answer_time);
-        //local_save_start("clock");
+    //local_save_start("clock");
     } else if (flag == "mistake") {
         hide_mask($('#mistake'));
         rollback();        
@@ -95,7 +95,8 @@ function study_rollback() {
 
 function click_knowwell(){
     hide_mask($('#knowwell'));
-    ajax_know_well();
+    show_mask($('#knowwell'));
+    reset_clock(last_time);
 }
 
 function hide_mask(ele){
@@ -144,7 +145,7 @@ function tree_times_true(is_error) {
     }
 }
 
- function stopBubble(e){
+function stopBubble(e){
     if(e && e.stopPropagation()){
         e.stopPropagation();
     } else {
@@ -153,14 +154,28 @@ function tree_times_true(is_error) {
 }
 
 function check_step4_drag(){
-  var this_answer_arr = [];
-  $(".drop_div").each(function(){
-    this_answer_arr.push($(this).html());
-  })
-  var this_answer = this_answer_arr.join(" ");
-      if(this_answer==true_answer){
-          answer_correct();
-      }else{
-          answer_mistake();
-      }
+    var this_answer_arr = [];
+    $(".drop_div").each(function(){
+        this_answer_arr.push($(this).html());
+    })
+    var this_answer = this_answer_arr.join(" ");
+    if(this_answer==true_answer){
+        answer_correct();
+    }else{
+        answer_mistake();
+    }
+}
+
+//不确认
+function not_sure(){
+    hide_mask($('#knowwell'));
+    if(answer_mark == true){
+        show_mask($('#correct'));
+        reset_clock(last_time);
+        local_save_start('correct');
+    }else{
+        reset_clock(answer_time);
+        local_save_start("clock");
+    }
+    
 }
