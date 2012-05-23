@@ -14,7 +14,8 @@
         <p>祝贺你，你已经背诵完了所有单词。</p>
         <% else %>
         <p>您今天的背诵任务已经全部完成。</p>
-        <p>下一步请于<font color="red"><%= @next_date %></font>回来复习，那天您有<font color="red"><%= @word_sum %></font>个单词需要巩固记忆。</p>
+        <% @day_show = {1=>"明天",2=>"后天",3=>"大后天"} ; n = @next_date.to_date.day-Time.now.to_date.day %>
+        <p>请于<font color="red"><%= @next_date %>(<%= @day_show[n].nil? ? "#{n}天后" : "#{@day_show[n]}" %>)</font>回来复习，那天您有<font color="red"><%= @word_sum %></font>个单词需要巩固记忆。</p>
         <% end %>
         <div class="t_btn border_radius" onclick="javascript:window.location.href='/words';"><h2>知道了</h2></div>
       </article>
