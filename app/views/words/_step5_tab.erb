@@ -3,9 +3,9 @@
     <article class="words_audio">
       <h3><%= @word.name %></h3>
       <div class="words_dy"><%= @word.phonetic %></div>
-      <div class="play_audio float_r">Play</div>
+      <div class="play_audio float_r" onclick="javascript:$('audio')[0].play();">Play</div>
       <audio preload="preload" loop>
-        <source src="<%= "#{Constant::SERVER_PATH}#{@word.enunciate_url}" %>" type="audio/mpeg"/>
+        <source src="<%= "#{Constant::BACK_SERVER_PATH}#{@word.enunciate_url}" %>" type="audio/mpeg"/>
         您的浏览器不支持 audio 标签。
       </audio>
       <div class="clear"></div>
