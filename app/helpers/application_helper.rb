@@ -90,7 +90,7 @@ module ApplicationHelper
               "end_at"=>(Constant::REVIEW_STEP[0][0]+Constant::REVIEW_STEP[0][1]).day.since.to_date,
               "is_error"=>"false","repeat_time"=>"0"})
           dates_str = xml.root.elements["old_words"].elements["all_date"].text if xml.root.elements["old_words"].elements["all_date"]
-          dates_arr = dates_str.empty? ? [] : dates_str.split(",")
+          dates_arr = (dates_str.nil? or dates_str.empty?) ? [] : dates_str.split(",")
           xml.root.elements["old_words"].elements["all_date"].text = (dates_arr|[Constant::REVIEW_STEP[0][0].day.since.to_date]).join(",")
         end
       end
@@ -125,7 +125,7 @@ module ApplicationHelper
               "end_at" => (Constant::REVIEW_STEP[this_step][0]+Constant::REVIEW_STEP[this_step][1]).day.since.to_date,
               "is_error" => "false","repeat_time" => "0"})
           dates_str = xml.root.elements["old_words"].elements["all_date"].text if xml.root.elements["old_words"].elements["all_date"]
-          dates_arr = dates_str.empty? ? [] : dates_str.split(",")
+          dates_arr = (dates_str.nil? or dates_str.empty?) ? [] : dates_str.split(",")
           xml.root.elements["old_words"].elements["all_date"].text = (dates_arr|[Constant::REVIEW_STEP[this_step][0].day.since.to_date]).join(",")
         else
           record = UserWordRelation.find_by_user_id(cookies[:user_id])
