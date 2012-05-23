@@ -5,4 +5,7 @@ class ApplicationController < ActionController::Base
   include ApplicationHelper
   
 
+  def check_is_today
+    
+  end
 end
