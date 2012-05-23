@@ -55,9 +55,9 @@
         <h3>你是如何理解这个句子的?</h3>
       </article>
       <section class="example_list drag_box">
-        <% drag_arr = @sentence.description.strip.gsub(","," ").gsub("!"," ").gsub("?"," ").gsub("."," ").gsub(";"," ").gsub("  "," ").split(" ") %>
+        <% drag_arr = @sentence.description.strip.gsub("\""," ").(","," ").gsub("!"," ").gsub("?"," ").gsub("."," ").gsub(";"," ").gsub("  "," ").split(" ") %>
         <% drop_arr = drag_arr.collect{|a|a="##{a}#"} %>
-        <% $drop_html=@sentence.description.strip.gsub(","," , ").gsub("."," . ").gsub("!"," ! ").gsub("?"," ? ").gsub(";"," ; ").gsub("  "," ").split(" ").collect{|a| a= (a!=","&&a!="."&&a!="!"&&a!="?"&&a!=";") ? "##{a}#" : "#{a}"}.join(" "); drop_arr.each do |a|; $drop_html = $drop_html.gsub("#{a}","######"); end; $drop_html = $drop_html.gsub("######","<div class='drop_div'></div>"); %>
+        <% $drop_html=@sentence.description.strip.gsub("\""," \" ").gsub(","," , ").gsub("."," . ").gsub("!"," ! ").gsub("?"," ? ").gsub(";"," ; ").gsub("  "," ").split(" ").collect{|a| a= (a!="\""&&a!=","&&a!="."&&a!="!"&&a!="?"&&a!=";") ? "##{a}#" : "#{a}"}.join(" "); drop_arr.each do |a|; $drop_html = $drop_html.gsub("#{a}","######"); end; $drop_html = $drop_html.gsub("######","<div class='drop_div'></div>"); %>
         <%= $drop_html.gsub(",","<div class='sign'>,</div>").gsub("!","<div class='sign'>!</div>").gsub("?","<div class='sign'>?</div>").gsub(".","<div class='sign'>.</div>").gsub(";","<div class='sign'>;</div>").html_safe %>
       </section>
       <section id="drag_span_list" class="example_list drag_box">
