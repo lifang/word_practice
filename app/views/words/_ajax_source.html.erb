@@ -11,8 +11,9 @@
 <script type="text/javascript" src="/assets/iscroll.js"></script>
 <script type="text/javascript" src="/assets/main.js"></script>
 <script type="text/javascript" src="/assets/start.js"></script>
+<input type="hidden" id="global_word_name" value="<%= @word.name.strip %>"></input>
 <script type="text/javascript">
-  var word_name = "<%= @word.name.strip %>";
+  var word_name = $("#global_word_name").val();
   var word_id = "<%= @word.id %>";
   var web_type = "<%= @web_type %>";
   var myScroll;
