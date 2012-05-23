@@ -94,7 +94,7 @@ function study_rollback() {
 }
 
 function click_knowwell(){
-    hide_mask($('#knowwell'));
+    hide_mask($('#correct'));
     show_mask($('#knowwell'));
     reset_clock(last_time);
 }
