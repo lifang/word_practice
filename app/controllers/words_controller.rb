@@ -36,12 +36,11 @@ class WordsController < ApplicationController
     #end
     #获取单词数据
     @source = word_source(xml)
-    @source.merge!({:timer => record.timer})
+    @source.merge!({:timer => record.timer}) if @source
     if @source.nil?
-      render :inline=>"当天单词已背完，Congratulation :)"
+      render :inline=>"所有单词已背完，Congratulation :)<script type='text/javascript>window.location.href='/words'</script>'"
       return false
     end
-    render :layout=>false
   end
 
 
@@ -63,7 +62,7 @@ class WordsController < ApplicationController
     record.update_study_times(study_time * params[:time_flag].to_i)
     write_xml(xml,x_url)
     source = word_source(xml)
-    source.merge!({:timer => record.timer})
+    source.merge!({:timer => record.timer}) if source
     if source
       render :partial=>"/words/ajax_source",:object=>source
     else
@@ -92,7 +91,7 @@ class WordsController < ApplicationController
     recite_ids = (recite_ids.split(",")<<word_id).join(",")
     record.update_attribute("recite_ids",recite_ids)
     source = word_source(xml)
-    source.merge!({:timer => record.timer})
+    source.merge!({:timer => record.timer}) if source
     if source
       render :partial=>"/words/ajax_source",:object=>source
     else
