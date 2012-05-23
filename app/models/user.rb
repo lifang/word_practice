@@ -43,9 +43,8 @@ class User < ActiveRecord::Base
       all_dates = doc.root.elements["old_words"].elements["all_date"].text if doc.root.elements["old_words"].elements["all_date"]
       leave_dates = []
       all_dates.split(",").each {|d|
-        leave_dates << d if d.to_date < Time.now.to_date
+        leave_dates << d  if d.to_date < Time.now.to_date
       } unless all_dates.nil? or all_dates.empty?
-      
       leave_dates.each {|l_d|
         word_list = doc.root.elements["old_words"].elements["_#{l_d}"]
         if !word_list.nil? and word_list.elements.size > 0
@@ -58,7 +57,10 @@ class User < ActiveRecord::Base
               if w.attributes["end_at"].to_date < Time.now.to_date
                 new_start_date = Time.now.strftime("%Y-%m-%d")
                 current_date_element = doc.root.elements["old_words"].elements["_#{new_start_date}"]
-                doc.root.elements["old_words"].add_element("_#{new_start_date}") if current_date_element.nil?
+                if current_date_element.nil?
+                  doc.root.elements["old_words"].add_element("_#{new_start_date}")
+                  doc.root.elements["old_words"].elements["all_date"].text = (all_dates.split(",") + [new_start_date]).join(",")
+                end
                 end_date = (Time.now + REPEAT_LAST_DAY[REPEAT_NUM[w.attributes["step"].to_i]].days).strftime("%Y-%m-%d")
                 
                 doc.root.elements["old_words"].elements["_#{new_start_date}"].add_element("word",
@@ -100,7 +102,7 @@ class User < ActiveRecord::Base
       <?xml version='1.0' encoding='UTF-8'?>
       <user_words user_id='#{self.id}'>
         <new_words></new_words>
-        <old_words></old_words>
+        <old_words><all_date></all_date></old_words>
       </user_words>
     XML
     return content
