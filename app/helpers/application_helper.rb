@@ -90,7 +90,7 @@ module ApplicationHelper
               "end_at"=>(Constant::REVIEW_STEP[0][0]+Constant::REVIEW_STEP[0][1]).day.since.to_date,
               "is_error"=>"false","repeat_time"=>"0"})
           dates_str = xml.root.elements["old_words"].elements["all_date"].text if xml.root.elements["old_words"].elements["all_date"]
-          dates_arr = dates_str.empty? ? [] : dates_str.split(",")
+          dates_arr = (dates_str.nil? or dates_str.empty?) ? [] : dates_str.split(",")
           xml.root.elements["old_words"].elements["all_date"].text = (dates_arr|[Constant::REVIEW_STEP[0][0].day.since.to_date]).join(",")
         end
       end
@@ -125,7 +125,7 @@ module ApplicationHelper
               "end_at" => (Constant::REVIEW_STEP[this_step][0]+Constant::REVIEW_STEP[this_step][1]).day.since.to_date,
               "is_error" => "false","repeat_time" => "0"})
           dates_str = xml.root.elements["old_words"].elements["all_date"].text if xml.root.elements["old_words"].elements["all_date"]
-          dates_arr = dates_str.empty? ? [] : dates_str.split(",")
+          dates_arr = (dates_str.nil? or dates_str.empty?) ? [] : dates_str.split(",")
           xml.root.elements["old_words"].elements["all_date"].text = (dates_arr|[Constant::REVIEW_STEP[this_step][0].day.since.to_date]).join(",")
         else
           record = UserWordRelation.find_by_user_id(cookies[:user_id])
@@ -167,7 +167,7 @@ module ApplicationHelper
     is_error = xml_word.attributes["is_error"]
     sentences = word.word_sentences
     #获取干扰选项
-    other_words = PhoneWord.get_words_by_level(word.level, 10)
+    other_words = PhoneWord.get_words_by_level(word.id, word.level, 10)
     return {:word => word, :web_type => web_type, :sentences => sentences,
       :other_words => (other_words.sort_by{rand})[0,3], :step => step, :is_error => is_error}
   end

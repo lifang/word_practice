@@ -29,19 +29,15 @@ class WordsController < ApplicationController
     x_url = "#{Rails.root}/public/#{record.practice_url}"
     xml = get_doc(x_url)
     #XML中的单词数如果少于限制数，则补充新词,一天最多更新一次
-    #last_update = xml.root.elements["new_words"].attributes["update"]
-    #if last_update.nil? || last_update.to_date.nil? || last_update.to_date<Time.now.to_date
     xml = update_newwords(xml,cookies[:user_id])
     write_xml(xml,x_url)
-    #end
     #获取单词数据
     @source = word_source(xml)
-    @source.merge!({:timer => record.timer})
+    @source.merge!({:timer => record.timer}) if @source
     if @source.nil?
-      render :inline=>"当天单词已背完，Congratulation :)"
+      redirect_to "/words/congratulation"
       return false
     end
-    render :layout=>false
   end
 
 
@@ -63,11 +59,11 @@ class WordsController < ApplicationController
     record.update_study_times(study_time * params[:time_flag].to_i)
     write_xml(xml,x_url)
     source = word_source(xml)
-    source.merge!({:timer => record.timer})
+    source.merge!({:timer => record.timer}) if source
     if source
       render :partial=>"/words/ajax_source",:object=>source
     else
-      redirect_to "/words/start"
+      render :inline=>"<script type='text/javascript'>window.location.href='/words/start'</script>"
     end
   end
 
@@ -92,13 +88,29 @@ class WordsController < ApplicationController
     recite_ids = (recite_ids.split(",")<<word_id).join(",")
     record.update_attribute("recite_ids",recite_ids)
     source = word_source(xml)
-    source.merge!({:timer => record.timer})
+    source.merge!({:timer => record.timer}) if source
     if source
       render :partial=>"/words/ajax_source",:object=>source
     else
-      redirect_to "/words/start"
+      render :inline=>"<script type='text/javascript'>window.location.href='/words/start'</script>"
     end
   end
-  
+
+  def congratulation
+    record = UserWordRelation.find_by_user_id(cookies[:user_id])
+    x_url = "#{Rails.root}/public/#{record.practice_url}"
+    xml = get_doc(x_url)
+    dates_str = xml.root.elements["old_words"].elements["all_date"].text if xml.root.elements["old_words"].elements["all_date"]
+    dates_arr = (dates_str.nil? or dates_str.empty?) ? [] : dates_str.split(",")
+    @next_date = ""
+    @word_sum = 0
+    dates_arr.each do |date|
+      if date.to_date>Time.now.to_date   
+        @next_date = date
+        @word_sum = xml.root.elements["old_words"].elements["_#{date}"].get_elements("//word").length
+        break
+      end
+    end
+  end
 
 end

@@ -123,7 +123,7 @@ class User < ActiveRecord::Base
     new_sum = xml.get_elements("/user_words/new_words//word").length
     doing_sum = xml.get_elements("/user_words/old_words//word").length
     all_sum = recite_sum + doing_sum + new_sum + nomal_sum
-    circle = [recite_sum*100/all_sum , doing_sum*100/all_sum]
+    circle = [recite_sum*100.0/all_sum , doing_sum*100.0/all_sum]
     circle[2] = 100 - circle[0] - circle[1]
     result[:data] = [recite_sum,doing_sum,nomal_sum+new_sum]
     result[:circle] = circle

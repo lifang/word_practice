@@ -94,7 +94,7 @@ function study_rollback() {
 }
 
 function click_knowwell(){
-    hide_mask($('#knowwell'));
+    hide_mask($('#correct'));
     show_mask($('#knowwell'));
     reset_clock(last_time);
 }
@@ -112,7 +112,7 @@ function show_mask(ele){
 }
 
 function check_step4_input(){
-    if($("#step4_input").length==0 || $("#step4_input").val().trim()==word_name){
+    if($("#step4_input").length==0 || $.trim($("#step4_input").val())==$.trim(word_name)){
         answer_correct();
     }else{
         answer_mistake();
