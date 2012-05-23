@@ -69,10 +69,16 @@ module ApplicationHelper
     old_words_node = xml.root.elements["old_words"]
     word_node = xml.root.elements["new_words//word[@id='#{word_id}']"]
     this_step = word_node.attributes["step"].to_i
-    if error == "error"
-      insert_node = xml.root.elements["new_words"]
-      insert_node.add_element("word", {"id" => word_id, "is_error" => "true",
-          "repeat_time" => "0", "step" => this_step})
+    if error == "error"||error == "pass"
+      if error == "error"
+        insert_node = xml.root.elements["new_words"]
+        insert_node.add_element("word", {"id" => word_id, "is_error" => "true",
+            "repeat_time" => "0", "step" => this_step})
+      elsif error == "pass"
+        insert_node = xml.root.elements["new_words"]
+        insert_node.add_element("word", {"id" => word_id, "is_error" => word_node.attributes["is_error"],
+            "repeat_time" => word_node.attributes["repeat_time"], "step" => this_step})
+      end
     else
       if word_node.attributes["is_error"]=="true" && word_node.attributes["repeat_time"]=="0"
         insert_node = xml.root.elements["new_words"]
@@ -103,11 +109,18 @@ module ApplicationHelper
   def handle_review_word(xml,word_id,error)
     old_words_node = xml.root.elements["old_words"]
     word_node = xml.root.elements["old_words//word[@id='#{word_id}']"]
-    if error == "error"
-      insert_node = xml.root.elements["_#{Time.now.to_date}"]
-      insert_node = old_words_node.add_element("_#{Time.now.to_date}") unless insert_node
-      insert_node.add_element("word", {"id" => word_id, "start_at" => word_node.attributes["start_at"],
-          "end_at" => word_node.attributes["end_at"],"step" => word_node.attributes["step"],"is_error" => "true","repeat_time" => "0"})
+    if error == "error"||error == "pass"
+      if error == "error"
+        insert_node = xml.root.elements["_#{Time.now.to_date}"]
+        insert_node = old_words_node.add_element("_#{Time.now.to_date}") unless insert_node
+        insert_node.add_element("word", {"id" => word_id, "start_at" => word_node.attributes["start_at"],
+            "end_at" => word_node.attributes["end_at"],"step" => word_node.attributes["step"],"is_error" => "true","repeat_time" => "0"})
+      elsif error == "pass"
+        insert_node = xml.root.elements["_#{Time.now.to_date}"]
+        insert_node = old_words_node.add_element("_#{Time.now.to_date}") unless insert_node
+        insert_node.add_element("word", {"id" => word_id, "start_at" => word_node.attributes["start_at"],
+            "end_at" => word_node.attributes["end_at"],"step" => word_node.attributes["step"],"is_error" => word_node.attributes["is_error"],"repeat_time" => word_node.attributes["repeat_time"]})
+      end
     else
       if word_node.attributes["is_error"]=="true" && word_node.attributes["repeat_time"].to_i<1
         insert_node = old_words_node.elements["_#{Time.now.to_date}"]
