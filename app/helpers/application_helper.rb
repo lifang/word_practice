@@ -167,7 +167,7 @@ module ApplicationHelper
     is_error = xml_word.attributes["is_error"]
     sentences = word.word_sentences
     #获取干扰选项
-    other_words = PhoneWord.get_words_by_level(word.level, 10)
+    other_words = PhoneWord.get_words_by_level(word.id, word.level, 10)
     return {:word => word, :web_type => web_type, :sentences => sentences,
       :other_words => (other_words.sort_by{rand})[0,3], :step => step, :is_error => is_error}
   end

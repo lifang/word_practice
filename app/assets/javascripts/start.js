@@ -112,7 +112,7 @@ function show_mask(ele){
 }
 
 function check_step4_input(){
-    if($("#step4_input").length==0 || $("#step4_input").val().trim()==word_name){
+    if($("#step4_input").length==0 || $.trim($("#step4_input").val())==$.trim(word_name)){
         answer_correct();
     }else{
         answer_mistake();
