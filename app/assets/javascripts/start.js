@@ -1,4 +1,3 @@
-
 $.fn.reorder = function() {
     //random array sort from
     //http://javascript.about.com/library/blsort2.htm
@@ -24,17 +23,6 @@ $.fn.reorder = function() {
         }
     }));
 }
-
-
-function loaded() {
-    myScroll = new iScroll('wrapper');
-}
-document.addEventListener('touchmove', function (e) {
-    e.preventDefault();
-}, false)
-document.addEventListener('DOMContentLoaded', function () {
-    setTimeout(loaded, 200);
-}, false);
 
 function rollback(){
     $("#face").hide();    
@@ -74,6 +62,7 @@ function goto_next(flag) {
         rollback();        
     } else if (flag == "treetrue") {
         $("#tishi_tt").hide();
+        answer_mark = true;
         hide_mask($('#treetrue'));
         ajax_next_word();
     }

@@ -6,6 +6,6 @@ class ApplicationController < ActionController::Base
   
 
   def check_is_today
-    
+    redirect_to "/" if (cookies[:user_id].nil? or cookies[:user_id].empty?)
   end
 end
