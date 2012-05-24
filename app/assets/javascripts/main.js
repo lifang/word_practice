@@ -89,4 +89,5 @@ $(document).ready(function(){
         myScroll.refresh();
       }  
     }, 300);
+    $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
 })

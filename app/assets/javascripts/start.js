@@ -26,13 +26,13 @@ $.fn.reorder = function() {
 
 function rollback(){
     $("#face").hide();    
-    $("#back").show();
-    $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
+    $("#back").show();    
     //翻面学习清空倒计时
     reset_clock(answer_time);
     if (myScroll != null && myScroll != undefined) {
         myScroll.refresh();
-      }
+    }
+    $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
 }
 
 function answer_correct(){
@@ -113,6 +113,7 @@ function check_step4_input(){
 
 //继续学习
 function ajax_next_word(){
+    reset_clock(answer_time);
     $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
     var error = $("#error").val();
     if(error!="error"&&answer_mark==false){
