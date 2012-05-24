@@ -30,6 +30,9 @@ function rollback(){
     $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
     //翻面学习清空倒计时
     reset_clock(answer_time);
+    if (myScroll != null && myScroll != undefined) {
+        myScroll.refresh();
+      }
 }
 
 function answer_correct(){
