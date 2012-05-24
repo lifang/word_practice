@@ -62,7 +62,7 @@
       </section>
       <section id="drag_span_list" class="example_list drag_box">
         <% drag_arr.each_with_index do |a,index| %>
-        <span id="drag<%= index %>" class="drag_span" onclick="javascript:stopBubble(event);" onmousedown="javascript:stopBubble(event);"><%= a %></span>
+        <span id="drag<%= index %>" class="drag_span" onmouseup="javascript:myScroll = new iScroll('wrapper');" onmousedown="javascript:myScroll.destroy();stopBubble(event);"><%= a %></span>
         <% end %>
       </section>
       <div class="jz_btn_box"><button class="bs_btn border_radius" onclick="javascript:check_step4_drag();">确认</button></div>
