@@ -3,9 +3,11 @@ class WordsController < ApplicationController
   require 'rexml/document'
   include REXML
   layout "application"
-  
+  before_filter 'check_is_today'
+
+
   def index
-    cookies[:user_id]=1
+    cookies[:user_id] ={:value =>1, :path => "/", :secure  => false,:expires =>Time.now.at_beginning_of_day+1.days}
     cookies[:user_name]="jeffrey6052"
     #---------------------------------------------------硬写 cookies
     @user = User.find(cookies[:user_id])
