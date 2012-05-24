@@ -96,8 +96,7 @@ function restart_clock() {
 function closeme(){
     $("#tishi_zz").hide();
     $("#jizhong_tab").hide();
-    window.open("", "_self", "");
-    window.close();
+    window.location.href="/words";
 }
 
 //定义两个全局变量用来记录答题定时的时间，和继续的定时时间

@@ -34,8 +34,8 @@ class LoginsController < ApplicationController
         end
       end
       user_word=@user.init_word_list(2)
-      cookies[:user_id] ={:value =>@user.id, :path => "/", :secure  => false,:expires =>Time.now.at_beginning_of_day+1.days}
-      cookies[:user_name] ={:value =>@user.username, :path => "/", :secure  => false,:expires =>Time.now.at_beginning_of_day+1.days}
+      cookies[:user_id] ={:value =>@user.id, :path => "/", :secure  => false,:expires =>Time.now.end_of_day}
+      cookies[:user_name] ={:value =>@user.username, :path => "/", :secure  => false,:expires =>Time.now.end_of_day}
       user_word.update_attributes(:login_time=>Time.now)
       unless user_word.study_role.nil?
         render :inline=>"<script type='text/javascript'>window.location.href='/words';</script>"
@@ -73,8 +73,8 @@ class LoginsController < ApplicationController
           end
         end
         user_word=@user.init_word_list(2)
-        cookies[:user_name] = {:value =>@user.username, :path => "/", :secure  => false,:expires =>Time.now.at_beginning_of_day+1.days}
-        cookies[:user_id] = {:value =>@user.id, :path => "/", :secure  => false,:expires =>Time.now.at_beginning_of_day+1.days}
+        cookies[:user_name] = {:value =>@user.username, :path => "/", :secure  => false,:expires =>Time.now.end_of_day}
+        cookies[:user_id] = {:value =>@user.id, :path => "/", :secure  => false,:expires =>Time.now.end_of_day}
         user_word.update_attributes(:login_time=>Time.now)
         unless user_word.study_role.nil?
           render :inline=>"<script type='text/javascript'>window.location.href='/words';</script>"
@@ -117,8 +117,8 @@ class LoginsController < ApplicationController
         end
       end
       user_word=@user.init_word_list(2)
-      cookies[:user_name] ={:value =>@user.username, :path => "/", :secure  => false,:expires =>Time.now.at_beginning_of_day+1.days}
-      cookies[:user_id] ={:value =>@user.id, :path => "/", :secure  => false,:expires =>Time.now.at_beginning_of_day+1.days}
+      cookies[:user_name] ={:value =>@user.username, :path => "/", :secure  => false,:expires =>Time.now.end_of_day}
+      cookies[:user_id] ={:value =>@user.id, :path => "/", :secure  => false,:expires =>Time.now.end_of_day}
       user_word.update_attributes(:login_time=>Time.now)
       unless user_word.study_role.nil?
         render :inline=>"<script type='text/javascript'>window.location.href='/words';</script>"
