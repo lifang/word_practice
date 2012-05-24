@@ -9,8 +9,8 @@ class WordsController < ApplicationController
   def index
     #puts "---------------"
     #puts Time.now.end_of_day
-    #cookies[:user_id] ={:value =>1, :path => "/", :secure  => false,:expires =>Time.now.end_of_day}
-    #cookies[:user_name]="jeffrey6052"
+    cookies[:user_id] ={:value =>1, :path => "/", :secure  => false,:expires =>Time.now.end_of_day}
+    cookies[:user_name]="jeffrey6052"
     #---------------------------------------------------硬写 cookies
     @user = User.find(cookies[:user_id])
     @user.init_word_list(2)  # 用户第一次登录，创建数据库记录，以及XML文件

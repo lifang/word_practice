@@ -14,7 +14,9 @@
     e.preventDefault();
   }, false)
   document.addEventListener('DOMContentLoaded', function () {
-    setTimeout(loaded, 150);
+    
+    setTimeout(function(){if($("#mark_iscroll_destroy").length==0){loaded}}, 150);
+
   }, false);
 </script>
 <header>

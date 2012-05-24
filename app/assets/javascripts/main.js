@@ -85,9 +85,12 @@ $(document).ready(function(){
         local_save_start("clock");
     }
     setTimeout(function(){
-      if (myScroll != null && myScroll != undefined) {
-        myScroll.refresh();
-      }  
+        if (myScroll != null && myScroll != undefined) {
+            myScroll.refresh();
+        }
     }, 300);
+    if(myScroll!=null && $("#mark_iscroll_destroy").length>0){
+        myScroll.destroy();
+    }
     $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
 })
