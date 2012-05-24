@@ -3,14 +3,18 @@
 <script type="text/javascript" src="/assets/iscroll.js"></script>
 <script type="text/javascript">
   var myScroll = null;
+  //定时器的初始参数
+  var local_start_time = null;
+  var local_timer = null;
+  var local_save_time = null;
   function loaded() {
-      myScroll = new iScroll('wrapper');
+    myScroll = new iScroll('wrapper');
   }
   document.addEventListener('touchmove', function (e) {
-      e.preventDefault();
+    e.preventDefault();
   }, false)
   document.addEventListener('DOMContentLoaded', function () {
-      setTimeout(loaded, 200);
+    setTimeout(loaded, 150);
   }, false);
 </script>
 <header>
@@ -21,7 +25,7 @@
 <section class="main" id="wrapper">
   <div id="scroller">
     <div id="ajax_loading">
-      <%= render :partial=>"/words/ajax_source",:object=>@source %>            
+      <%= render :partial=>"/words/ajax_source",:object=>@source %>
     </div>
   </div>
 </section>

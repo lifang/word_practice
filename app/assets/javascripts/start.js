@@ -168,6 +168,5 @@ function not_sure(){
     }else{
         reset_clock(answer_time);
         local_save_start("clock");
-    }
-    
+    }    
 }

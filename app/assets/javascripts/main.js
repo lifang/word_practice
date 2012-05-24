@@ -1,25 +1,4 @@
-// JavaScript Document
-/*function tab_div(style) {
-    //var scolltop = document.body.scrollTop|document.documentElement.scrollTop;
-    var win_height = $(window).height();
-    var win_width = $(window).width();
-    var z_layer_height = $(style).height();
-    var z_layer_width = $(style).width();
-    $(style).css('top',(win_height-z_layer_height)/2);
-    $(style).css('left',(win_width-z_layer_width)/2);
-    $(style).show();
-}
-$(document).ready(function(){
-	tab_div('.t_area');
-	//alert(0)
-})
-
-*/
-
 //5秒钟定时器
-var local_start_time = null;
-var local_timer = null;
-var local_save_time = null;
 function local_save_start(flag) {
     local_save_time = new Date();    
     if (flag == "clock") {
@@ -104,5 +83,10 @@ $(document).ready(function(){
     if ($(".count_down").length > 0) {
         local_start_time = answer_time;
         local_save_start("clock");
-    }    
+    }
+    setTimeout(function(){
+      if (myScroll != null && myScroll != undefined) {
+        myScroll.refresh();
+      }  
+    }, 300);
 })
