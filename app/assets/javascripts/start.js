@@ -123,6 +123,9 @@ function check_step4_input(){
 function ajax_next_word(){
     $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
     var error = $("#error").val();
+    if(error!="error"&&answer_mark==false){
+        error = "pass"
+    }
     $('#ajax_loading').load("/words/ajax_next_word?word_id="+word_id+"&type="+web_type+"&error="+error+"&time_flag="+time_flag);
 }
 
