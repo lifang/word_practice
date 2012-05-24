@@ -31,6 +31,8 @@ function rollback(){
     reset_clock(answer_time);
     if (myScroll != null && myScroll != undefined) {
         myScroll.refresh();
+    }else{
+        myScroll = new iScroll('wrapper');
     }
     $('#scroller').css('-webkit-transform','translate3d(0px,0px,0px)');
 }
