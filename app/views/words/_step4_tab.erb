@@ -1,5 +1,7 @@
 <script  type="text/javascript" src="/assets/jquery-ui.min.js"></script>
 <script  type="text/javascript" src="/assets/jquery.ui.touch-punch.min.js"></script>
+
+
 <% @sentence = @sentences.length>3 ? @sentences[2] : @sentences[-1] unless @sentences.blank? %>
 <% if @word.name.strip.split(" ").length==1 %>
   <% leving_word = leving_word(@sentence.description, @word.name) if @sentence and @sentence.description %>
@@ -32,7 +34,7 @@
         <div class="m_bt">在输入框中拼写单词。<span class="count_down">5</span></div>
         <section class="example_list">
           <p><%= @sentence.description.sub("#{leving_word}","<input class=\"words_input\" id=\"step4_input\" type=\"text\" />")
-              .sub("#{leving_word.capitalize}","<input class=\"words_input\" id=\"step4_input\" type=\"text\" />").html_safe if @sentence and @sentence.description %></p>
+            .sub("#{leving_word.capitalize}","<input class=\"words_input\" id=\"step4_input\" type=\"text\" />").html_safe if @sentence and @sentence.description %></p>
         </section>
         <div class="jz_btn_box"><button class="bs_btn border_radius" onclick="javascript:check_step4_input();">确认</button></div>
       </section>
@@ -62,7 +64,7 @@
       </section>
       <section id="drag_span_list" class="example_list drag_box">
         <% drag_arr.each_with_index do |a,index| %>
-        <span id="drag<%= index %>" class="drag_span" onmousedown="javascript:stopBubble(event);"><%= a %></span>
+          <span id="drag<%= index %>" class="drag_span" onmousedown="javascript:stopBubble(event);"><%= a %></span>
         <% end %>
       </section>
       <div class="jz_btn_box"><button class="bs_btn border_radius" onclick="javascript:check_step4_drag();">确认</button></div>
@@ -71,17 +73,18 @@
       <div class="rollBack" onclick="javascript:rollback();">翻面学习</div>
       <div class="knowWell" onclick="javascript:click_knowwell();">已经掌握</div>
     </section>
+    <div id="mark_iscroll_destroy" ></div>
   </div>
-  <script type="text/javascript">    
+  <script type="text/javascript">
     time_flag = 4;
     answer_time = <%= @timer.nil? ? 15 : (@timer.split(",")[0].to_i)*4 %>;
     var true_answer = "<%= drag_arr.join(" ") %>";
     $("#drag_span_list").reorder();
     $('.drag_span').draggable({helper: "clone"});
     $(".drop_div").droppable({
-        drop: function( event, ui ) {
-                $(this).html(ui.draggable.html());
-        }
+      drop: function( event, ui ) {
+        $(this).html(ui.draggable.html());
+      }
     })
 
   </script>

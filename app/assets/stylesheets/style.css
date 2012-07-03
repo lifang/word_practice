@@ -141,7 +141,7 @@ header {
 .words_dy { float: left; font-size: 18px; margin-left: 20px; padding-top: 12px;}
 .play_audio {width: 35px; height: 32px; background: url(/assets/lb_icon.png) no-repeat; overflow:hidden; text-indent: -999px;}
 
-.words_cx { height: 32px; line-height: 32px; margin: 5px 0;}
+.words_cx { line-height: 32px; margin: 5px 0;}
 .words_cx span { font-size: 26px; margin: 0 10px;}
 
 .words_list {
@@ -156,7 +156,7 @@ header {
 	word-break:break-all;
 	overflow: hidden;
 }
-.words_list span { font-size: 32px; margin: 0 10px;}
+.words_list span { font-size: 24px; margin: 0 10px;}
 
 .example_list { line-height: 30px; padding: 0 10px; margin: 20px 20px; }
 
@@ -238,6 +238,8 @@ header {
 }
 .drag_box div.sign { border: none; min-width:10px; background: none;}
 
+
+
 /*斜纹角度--------*/
 .stripes {
     -webkit-background-size: 50px 50px;
@@ -276,4 +278,3 @@ header {
 	width:100%;
 	padding:0;
 }
-

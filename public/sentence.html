@@ -1,0 +1,98 @@
+﻿<html>
+<head>
+	<title>句子</title>
+</head>
+
+<body>
+
+	
+	<div id="preview">
+	<p id="pre_sentence"></p>
+	<button onclick="javascript:practice()">开始组词</button>
+	</div>
+	<div id="practice" style="display:none;">
+	<p><button onclick="javascript:backspace()">撤销</button></p>
+	<p id="current" style="height:30px;background:yellow;"></p>
+	<p id="select"></p>
+
+	</div>
+	
+	
+	<script type="text/javascript">
+
+		function wanted_str(str){
+			return str.replace(/'/g," ").replace(/:/g," ").replace(/;/g," ").replace(/\?/g," ").replace(/!/g," ").replace(/,/g," ").replace(/\./g," ").replace(/  /g," ");
+		}
+		
+        function str2arr(str){
+			if(str==null)return [];
+			var a = str.split(" ");
+			var r = [];
+			var x = 0;
+			for(var i=0;i<a.length;i++){
+				if(a[i]!=""){
+					r[x] = a[i];
+					x++;
+				}
+			}
+			return r;
+		}
+		
+		function arr2choice(arr){
+			var arr = arr.sort();
+			for(var i=0;i<arr.length;i++){
+				document.getElementById("select").innerHTML += "<button id='choice"+(i+1)+"' title='"+arr[i]+"' onclick=\"javascript:choose('"+arr[i]+"',"+(i+1)+")\">"+arr[i]+"</button>";
+			}
+		}
+		
+		_sentence = "My name is XuQiYong,I am a happy boy and I love XiaoMei."; //预设句子
+		document.getElementById("pre_sentence").innerHTML = _sentence;
+		
+		var _answer = wanted_str(_sentence);
+		var _ans_arr = str2arr(_answer);
+		var _correct_answer = _ans_arr.join(" ");
+		arr2choice(_ans_arr);    
+		
+		
+		_history = [];  //记录操作历史，用于撤销操作
+		
+		
+		//开始组词
+		function practice(){
+			document.getElementById("preview").style.display = "none";
+			document.getElementById("practice").style.display = "block";
+		}
+		
+		//撤销
+		function backspace(){
+			if(_history.length==0)return;
+			var m = _history.pop();
+			document.getElementById("choice"+m).style.display = "";
+			var current = document.getElementById("current").innerHTML.split(" ");
+			current.pop();
+			current.pop();
+			if(current.length==0){
+			document.getElementById("current").innerHTML=""
+			}else{
+			document.getElementById("current").innerHTML = ""+current.join(" ")+" ";
+			}
+        }
+		
+		//选词
+		function choose(str,m){
+			document.getElementById("choice"+m).style.display = "none";
+			_history.push(m);
+			document.getElementById("current").innerHTML += ""+str+" ";
+			check();
+		}
+		
+		//检查是否做对
+		function check(){
+			if(document.getElementById("current").innerHTML == _correct_answer+" ")alert('Congratulation!');
+		}
+		
+	</script>
+	
+</body>
+
+</html>

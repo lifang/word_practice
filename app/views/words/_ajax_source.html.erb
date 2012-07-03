@@ -6,9 +6,6 @@
 @timer = ajax_source[:timer]
 @is_error = ajax_source[:is_error]
 %>
-<link href="/assets/style.css" rel="stylesheet" type="text/css"/>
-<%= javascript_include_tag "application" %>
-<script type="text/javascript" src="/assets/iscroll.js"></script>
 <script type="text/javascript" src="/assets/main.js"></script>
 <script type="text/javascript" src="/assets/start.js"></script>
 <input type="hidden" id="global_word_name" value="<%= @word.name.strip %>"></input>
@@ -16,7 +13,6 @@
   var word_name = $("#global_word_name").val();
   var word_id = "<%= @word.id %>";
   var web_type = "<%= @web_type %>";
-  var myScroll;
   var step = "<%= @step %>";
   var correct_sum = 0;
   var answer_time = <%= @timer.nil? ? 15 : @timer.split(",")[0].to_i %>;
@@ -26,9 +22,9 @@
 </script>
 
 <% if @web_type == "recite" %>
-  <%= render :partial => "/words/step1_tab" if @step=="1" %>
-  <%= render :partial => "/words/step2_tab" if @step=="2" %>
-  <%= render :partial => "/words/step3_tab" if @step=="3" %>
+  <%= render :partial => "/words/step4_tab" if @step=="1" %>
+  <%= render :partial => "/words/step4_tab" if @step=="2" %>
+  <%= render :partial => "/words/step4_tab" if @step=="3" %>
   <%= render :partial => "/words/step4_tab" if @step=="4" %>
 <% end %>
 
@@ -61,15 +57,15 @@
   <div class="mask" id="tishi_tt" style="display: none;"></div>
   <article class="t_area" id="treetrue" style="display:none;">
     <div class="t_icon"><img src="/assets/suo_icon.png" /></div>
-    <h1>您是否已经认识这个单词？</h1>
-    <div class="t_btn border_radius" onclick="javascript:ajax_know_well();"><h2>是</h2><p>标记该单词为"是",并开始学习下一单词</p></div>
+    <h1>您之前是否已经认识这个单词？</h1>
+    <div class="t_btn border_radius" onclick="javascript:ajax_know_well();"><h2>是</h2><p>标记该单词为"已学会",并开始学习下一单词</p></div>
     <div class="t_btn border_radius" onclick="javascript:goto_next('treetrue');"><h2>不是</h2><p>返回继续学习该单词</p></div>
   </article>
 <% end %>
 <input id="error" type="hidden" value=""></input>
 
 <script type="text/javascript">
-  $(".to_be_sort").reorder();
+  $(".to_be_sort").reorder();  
 </script>
 
 <%= render :partial => "/words/tishi_tab" %>

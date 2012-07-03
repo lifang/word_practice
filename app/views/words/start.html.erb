@@ -1,3 +1,24 @@
+<link href="/assets/style.css" rel="stylesheet" type="text/css"/>
+<%= javascript_include_tag "application" %>
+<script type="text/javascript" src="/assets/iscroll.js"></script>
+<script type="text/javascript">
+  var myScroll = null;
+  //定时器的初始参数
+  var local_start_time = null;
+  var local_timer = null;
+  var local_save_time = null;
+  function loaded() {
+    myScroll = new iScroll('wrapper');
+  }
+  document.addEventListener('touchmove', function (e) {
+    e.preventDefault();
+  }, false)
+  document.addEventListener('DOMContentLoaded', function () {
+    
+    setTimeout(function(){if($("#mark_iscroll_destroy").length==0){loaded}}, 150);
+
+  }, false);
+</script>
 <header>
   <div class="top_line"></div>
   <div class="back border_radius" onclick="javascipt:window.location.href='/words';" >返回</div>
@@ -6,7 +27,7 @@
 <section class="main" id="wrapper">
   <div id="scroller">
     <div id="ajax_loading">
-      <%= render :partial=>"/words/ajax_source",:object=>@source %>            
+      <%= render :partial=>"/words/ajax_source",:object=>@source %>
     </div>
   </div>
 </section>

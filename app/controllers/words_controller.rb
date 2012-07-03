@@ -7,7 +7,9 @@ class WordsController < ApplicationController
 
 
   def index
-    cookies[:user_id] ={:value =>1, :path => "/", :secure  => false,:expires =>Time.now.at_beginning_of_day+1.days}
+    #puts "---------------"
+    #puts Time.now.end_of_day
+    cookies[:user_id] ={:value =>1, :path => "/", :secure  => false,:expires =>Time.now.end_of_day}
     cookies[:user_name]="jeffrey6052"
     #---------------------------------------------------硬写 cookies
     @user = User.find(cookies[:user_id])
