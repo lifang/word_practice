@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+	<head>
+		<title>sAlert</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<meta http-equiv="Content-Language" content="gb2312" />
+		<style type="text/css">*{margin:0;padding:0;}</style>
+		<script src="sAlert.js"></script>
+	</head>
+	<body>
+	
+	<div>    
+		<div style="height:600px;margin:30px;">
+		     <input type="button" value="默认弹出框" onclick="sAlert('hi,baby.I love you.',300,130);" />
+			 <input type="button" value="自定义弹出框" onclick="sAlert('hi,baby.I love you.',300,100,document.getElementById('test'));" />
+		</div>
+		
+		
+		<div id="test" style="background:#cff;display:none;">
+		    <p>隐藏在页面上的DIV，直接弹出来。</p>
+			<p>样式可自行设置。</p>
+			<P><input type="button" value="确 定" onclick="javascript:doOk()" /></p>
+		</div>
+		
+	</div>
+	</body>
+</html>
