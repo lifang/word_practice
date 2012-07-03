@@ -9,7 +9,7 @@ WordPractice::Application.routes.draw do
   end
   resources :words do
     collection do
-      get :start,:ajax_next_word,:ajax_know_well,:congratulation
+      get :start,:ajax_next_word,:ajax_know_well,:congratulation,:read_article
     end
   end
  

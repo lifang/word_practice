@@ -139,4 +139,5 @@ class LoginsController < ApplicationController
     UserWordRelation.find_by_user_id( cookies[:user_id]).update_attributes(param)
     redirect_to "/words"
   end
+  
 end

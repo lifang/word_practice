@@ -201,4 +201,32 @@ module ApplicationHelper
     return lev_word
   end
 
+  def read_txt(file,serial)
+    file = File.open("#{Rails.root}/public/#{file}/#{serial}.txt","rb")
+    content= file.read.to_s
+    file.close
+    return content
+  end
+
+  def select_file(user_id)
+    files=read_txt("users_action",user_id)
+    if files.include? "0"
+      all_file=files.split(";")
+      unread_files=all_file[0].split(",")
+      unread_files.delete("0")
+      num=unread_files[rand(unread_files.size-1)]
+      select_file=num
+      unread_files.delete(select_file)
+      select_file="#{select_file},"+all_file[1] unless all_file[1].nil?
+      url="#{Rails.root}/public/users_action/#{1}.txt"
+      if unread_files==[]
+        write_xml(select_file,url)
+      else
+        str=(unread_files << 0).join(",")+";#{select_file}"
+        write_xml(str,url)
+      end
+    end
+    return num
+  end
+
 end
