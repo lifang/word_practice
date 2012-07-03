@@ -3,7 +3,7 @@ class WordsController < ApplicationController
   require 'rexml/document'
   include REXML
   layout "application"
-  before_filter 'check_is_today'
+  before_filter 'check_is_today',:except=>["read_article"]
 
 
   def index
@@ -115,4 +115,18 @@ class WordsController < ApplicationController
     end
   end
 
+  def read_article
+    p cookies[:reading_txt]
+    if  cookies[:reading_txt].nil?
+      file_id=select_file(1)
+      if  file_id.nil?
+        render :inline=>"恭喜您已读完所有练习文章，暂无更新"
+      else
+        cookies[:reading_txt]=file_id
+        @content=read_txt("articles",cookies[:reading_txt])
+      end
+    else
+      @content=read_txt("articles",cookies[:reading_txt])
+    end
+  end
 end

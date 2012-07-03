@@ -1,0 +1,31 @@
+<% contents= @content.gsub("\r\n"," ").encode!('ASCII-8BIT', 'UTF-8', :invalid => :replace) %>
+<div style="background:gray ">
+  <% contents.split(":(-").each do |section| %>
+    <article>
+      <% section.split(":)-").each do |words| %>
+        <p><%= words %></p>
+      <% end %>
+    </article>
+  <% end  %>
+</div>
+<button onclick="set_show()">设置时间</button>
+<script type="text/javascript">
+  var i=0;
+  var time=50;
+  var t;
+  function toggle_show()
+  {
+    i++;
+    if(i<$("p").size()) t=setTimeout(function(){ $("p").css("background","gray");
+      $("p:eq("+ i+")").css("background","white");toggle_show()},$("p:eq("+ i+")").html().length*time);
+  }
+  $("p:eq(0)").first().css("background","white");
+  toggle_show();
+  function set_show(){
+    $("p").css("background","gray");
+    time=10;
+    i=0;
+    $('p:eq(0)').first().css('background','white');
+    toggle_show();
+  }
+</script>
